@@ -6,6 +6,7 @@ import { ja } from "date-fns/locale"
 import DatePicker from "./DatePicker"
 import Link from "next/link"
 import { Calendar, Home, Clock, User } from "lucide-react"
+import Image from "next/image"
 
 // データ項目の型定義
 interface ScheduleItem {
@@ -108,6 +109,11 @@ export default function DailyViewer() {
         <div className="text-sm font-medium text-purple-700 flex items-center">
           <Calendar size={14} className="mr-1" />
           {format(selectedDate || new Date(), "yyyy年MM月dd日 (eee)", { locale: ja })}
+          {selectedDate && format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") && (
+            <span className="ml-1">
+              <Image src="/images/qyan.png" alt="今日" width={16} height={16} className="inline-block animate-bounce" />
+            </span>
+          )}
         </div>
       </div>
 

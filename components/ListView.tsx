@@ -3,6 +3,7 @@
 import { useMemo, useEffect, useRef } from "react"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
+import Image from "next/image"
 
 const shortenDayOfWeek = (day: string): string => {
   const shortDays: { [key: string]: string } = {
@@ -164,7 +165,17 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
               >
                 <td className="py-1 px-1 sm:px-3 text-left whitespace-nowrap">
                   {formattedDate}
-                  {isToday && <span className="ml-1 text-xs text-red-500">●</span>} {/* 今日の日付にマーカーを追加 */}
+                  {isToday && (
+                    <span className="ml-1 inline-block align-middle">
+                      <Image
+                        src="/images/qyan.png"
+                        alt="今日"
+                        width={16}
+                        height={16}
+                        className="inline-block animate-bounce"
+                      />
+                    </span>
+                  )}
                 </td>
                 <td className="py-1 px-1 sm:px-2 text-left">{shortenDayOfWeek(item.曜日 || "")}</td>
                 <td className="py-1 px-1 sm:px-2 text-left">{item.時限}</td>
