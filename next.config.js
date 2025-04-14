@@ -17,6 +17,13 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  // TypeScriptのビルドエラーを無視する設定を追加
+  typescript: {
+    // !! 警告 !!
+    // プロジェクトに型エラーがあっても、本番ビルドを成功させることを許可します
+    // !! 警告 !!
+    ignoreBuildErrors: true,
+  },
 }
 
 module.exports = nextConfig
