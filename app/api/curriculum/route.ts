@@ -4,10 +4,21 @@ import { cookies } from "next/headers"
 
 export const dynamic = "force-dynamic"
 
+// スケジュールアイテムの型を定義
+interface ScheduleItem {
+  id?: number
+  日付?: string
+  曜日?: string
+  時限?: string
+  created_at?: string
+  updated_at?: string
+  [key: string]: any
+}
+
 // fetchAllData 関数を改善
 async function fetchAllData(supabase) {
   try {
-    let allData = []
+    let allData: ScheduleItem[] = []
     let hasMore = true
     let start = 0
     const pageSize = 1000
@@ -41,16 +52,26 @@ async function fetchAllData(supabase) {
         return []
       }
 
-      if (data.length > 0) {
-        allData = [...allData, ...data]
+      // 型安全のためにフィルタリング
+      const safeData = data
+        .filter((item): item is ScheduleItem => item !== null && typeof item === "object")
+        .map((item) => ({
+          ...item,
+          日付: item.日付 || "",
+          曜日: item.曜日 || "",
+          時限: item.時限 || "",
+        }))
+
+      if (safeData.length > 0) {
+        allData = [...allData, ...safeData]
         start += pageSize
-        console.log(`API: ${start}行目までのデータを取得しました (${data.length}件)`)
+        console.log(`API: ${start}行目までのデータを取得しました (${safeData.length}件)`)
       } else {
         console.log("API: これ以上データがありません")
       }
 
       // データが pageSize より少なければ、すべてのデータを取得完了
-      hasMore = data.length === pageSize
+      hasMore = safeData.length === pageSize
     }
 
     console.log(`API: 合計 ${allData.length} 行のデータを取得しました`)

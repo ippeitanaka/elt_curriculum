@@ -4,14 +4,24 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
 import ListView from "../../../components/ListView"
 
+// データ項目の型定義
+interface ScheduleItem {
+  日付?: string
+  曜日?: string
+  時限?: string
+  filteredYear?: number
+  filteredClass?: string
+  [key: string]: any
+}
+
 export default function TeacherSchedule() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState<ScheduleItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [selectedInstructor, setSelectedInstructor] = useState("全て")
   const router = useRouter()
   const lastModifiedRef = useRef<string | null>(null)
-  const [debugInfo, setDebugInfo] = useState(null) // デバッグ情報を追加
+  const [debugInfo, setDebugInfo] = useState<any>(null) // デバッグ情報を追加
   const [noDataMessage, setNoDataMessage] = useState("")
 
   const fetchData = useCallback(
@@ -89,8 +99,18 @@ export default function TeacherSchedule() {
           setNoDataMessage("表示するデータがありません。")
           setData([])
         } else {
-          setData(result.data)
-          console.log(`${result.data.length}件のデータを取得しました`)
+          // 型安全のためにフィルタリング
+          const safeData = result.data
+            .filter((item: any): item is ScheduleItem => item !== null && typeof item === "object")
+            .map((item: ScheduleItem) => ({
+              ...item,
+              日付: item.日付 || "",
+              曜日: item.曜日 || "",
+              時限: item.時限 || "",
+            }))
+
+          setData(safeData)
+          console.log(`${safeData.length}件のデータを取得しました`)
         }
       } catch (error) {
         console.error("データ取得エラー:", error)
@@ -127,7 +147,7 @@ export default function TeacherSchedule() {
   const instructors = useMemo(() => {
     if (!data || data.length === 0) return ["全て"]
 
-    const instructorSet = new Set()
+    const instructorSet = new Set<string>()
     data.forEach((item) => {
       if (!item) return // null チェック
 
@@ -148,9 +168,9 @@ export default function TeacherSchedule() {
     if (selectedInstructor === "全て") return data
 
     return data
-      .filter((item) => item) // null チェック
+      .filter((item): item is ScheduleItem => item !== null && typeof item === "object") // null チェック
       .flatMap((item) => {
-        const filteredClasses = []
+        const filteredClasses: ScheduleItem[] = []
         for (let i = 1; i <= 3; i++) {
           for (const cls of ["A", "B", "N"]) {
             if (item[`${i}年${cls}クラス担当講師名`] === selectedInstructor) {
