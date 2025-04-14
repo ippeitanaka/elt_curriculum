@@ -1,28 +1,23 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Supabaseの環境変数が設定されていません")
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey)
-
-// スケジュールアイテムの型を定義
-interface ScheduleItem {
-  id?: number
-  日付?: string
-  曜日?: string
-  時限?: string
-  created_at?: string
-  updated_at?: string
-  [key: string]: any
-}
 
 export async function GET() {
   try {
+    // 環境変数が設定されていない場合は、エラーメッセージを返す
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.warn("Supabaseの環境変数が設定されていません。")
+      return NextResponse.json({
+        error: "Supabaseの環境変数が設定されていません",
+        message: "環境変数を設定してください",
+      })
+    }
+
+    // 環境変数が設定されている場合のみ、Supabaseクライアントを初期化
+    const { createClient } = await import("@supabase/supabase-js")
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
     // 日付の範囲を指定せずに全データを取得
     const { data, error } = await supabase.from("スケジュール").select("*").order("日付", { ascending: true })
 
@@ -36,10 +31,10 @@ export async function GET() {
     }
 
     // スケジュールアイテムとして型を保証
-    const safeData = data.filter((item): item is ScheduleItem => item !== null && typeof item === "object")
+    const safeData = data.filter((item) => item !== null && typeof item === "object")
 
     // 日付ごとのデータ数を集計
-    const dateCount: Record<string, number> = {}
+    const dateCount = {}
     safeData.forEach((item) => {
       if (item.日付) {
         const date = item.日付
@@ -48,7 +43,7 @@ export async function GET() {
     })
 
     // 日付の範囲を確認
-    const dates = safeData.map((item) => item.日付).filter((date): date is string => typeof date === "string")
+    const dates = safeData.map((item) => item.日付).filter((date) => typeof date === "string")
     const uniqueDates = [...new Set(dates)].sort()
 
     // 9月のデータを特に詳しく調査

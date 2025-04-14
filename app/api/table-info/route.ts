@@ -1,17 +1,23 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Supabaseの環境変数が設定されていません")
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 export async function GET() {
   try {
+    // 環境変数が設定されていない場合は、エラーメッセージを返す
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.warn("Supabaseの環境変数が設定されていません。")
+      return NextResponse.json({
+        error: "Supabaseの環境変数が設定されていません",
+        message: "環境変数を設定してください",
+      })
+    }
+
+    // 環境変数が設定されている場合のみ、Supabaseクライアントを初期化
+    const { createClient } = await import("@supabase/supabase-js")
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
     // スケジュールテーブルの情報を取得
     const { data, error } = await supabase.from("スケジュール").select("*").limit(1)
 
