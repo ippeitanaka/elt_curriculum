@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useEffect, useRef } from "react"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 
@@ -18,6 +18,10 @@ const shortenDayOfWeek = (day: string): string => {
 }
 
 export default function ListView({ data, filter, selectedInstructor, showExamsOnly }) {
+  // 今日の日付を取得
+  const today = format(new Date(), "yyyy-MM-dd")
+  const todayRef = useRef<HTMLTableRowElement>(null)
+
   const sortedData = useMemo(() => {
     // データが null または空の場合は空の配列を返す
     if (!data || data.length === 0) return []
@@ -44,6 +48,17 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
         return true
       })
   }, [data, filter.year, filter.class, showExamsOnly])
+
+  // コンポーネントがマウントされたとき、または表示モードが変更されたときに今日の日付にスクロール
+  useEffect(() => {
+    if (todayRef.current) {
+      // スムーズにスクロール
+      todayRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      })
+    }
+  }, []) // 依存配列を空にして、コンポーネントのマウント時のみ実行
 
   let currentDate = null
 
@@ -93,18 +108,26 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
             const isMockExam = periods.includes("模試")
             const isSelfStudy = content === "自宅学習"
 
+            // 今日の日付かどうかをチェック
+            const isToday = item.日付 === today
+
             return (
               <tr
                 key={`${index}-${year}-${cls}`}
+                ref={isToday ? todayRef : null} // 今日の日付の行にrefを設定
                 className={`
                   ${isExam ? "bg-red-100 hover:bg-red-200" : ""}
                   ${isMockExam && !isExam ? "bg-orange-100 hover:bg-orange-200" : ""}
                   ${isSelfStudy && !isExam && !isMockExam ? "bg-sky-100 hover:bg-sky-200" : ""}
                   ${!isExam && !isMockExam && !isSelfStudy ? "hover:bg-gray-50" : ""}
                   ${isNewDate ? "border-t border-gray-300" : ""}
+                  ${isToday ? "bg-yellow-50 hover:bg-yellow-100" : ""} // 今日の日付をハイライト
                 `}
               >
-                <td className="py-1 px-1 sm:px-3 text-left whitespace-nowrap">{formattedDate}</td>
+                <td className="py-1 px-1 sm:px-3 text-left whitespace-nowrap">
+                  {formattedDate}
+                  {isToday && <span className="ml-1 text-xs text-red-500">●</span>} {/* 今日の日付にマーカーを追加 */}
+                </td>
                 <td className="py-1 px-1 sm:px-2 text-left">{shortenDayOfWeek(item.曜日 || "")}</td>
                 <td className="py-1 px-1 sm:px-2 text-left">{item.時限}</td>
                 <td className="py-1 px-1 sm:px-3 text-left">{content}</td>

@@ -27,6 +27,7 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
   const [csvAnalysis, setCsvAnalysis] = useState(null)
 
   const lastModifiedRef = useRef<string | null>(null)
+  const listViewInitializedRef = useRef<boolean>(false)
 
   // データが null の場合のチェックを追加
   const fetchData = useCallback(async (retryCount = 0) => {
@@ -96,6 +97,14 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
 
     return () => clearInterval(intervalId)
   }, [fetchData, initialData])
+
+  // ビュー切り替え時の処理
+  useEffect(() => {
+    // リスト表示に切り替わったときに、listViewInitializedRefをリセット
+    if (view === "list") {
+      listViewInitializedRef.current = false
+    }
+  }, [view])
 
   if (error) {
     return (
