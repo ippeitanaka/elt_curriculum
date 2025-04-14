@@ -7,6 +7,14 @@ import FilterComponent from "./FilterComponent"
 import ViewToggle from "./ViewToggle"
 import { M_PLUS_Rounded_1c } from "next/font/google"
 
+// データ項目の型定義
+interface ScheduleItem {
+  日付?: string
+  曜日?: string
+  時限?: string
+  [key: string]: any // その他のプロパティ（クラス情報など）
+}
+
 // かわいい丸みのあるフォントに変更
 const mplusRounded = M_PLUS_Rounded_1c({
   weight: ["400", "500", "700"],
@@ -18,7 +26,7 @@ const mplusRounded = M_PLUS_Rounded_1c({
 export default function CurriculumViewer({ initialYear, initialClass, initialData }) {
   const [view, setView] = useState("calendar")
   const [filter, setFilter] = useState({ year: initialYear, class: initialClass })
-  const [data, setData] = useState(initialData || [])
+  const [data, setData] = useState<ScheduleItem[]>(initialData || [])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [showExamsOnly, setShowExamsOnly] = useState(false)
@@ -126,12 +134,14 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
   }
 
   // データを日付と時限でソート
-  const sortedData = [...data].sort((a, b) => {
-    const dateA = new Date(a.日付).getTime()
-    const dateB = new Date(b.日付).getTime()
-    if (dateA !== dateB) return dateA - dateB
-    return a.時限.localeCompare(b.時限)
-  })
+  const sortedData = [...data]
+    .filter((item): item is ScheduleItem => item != null && typeof item === "object")
+    .sort((a, b) => {
+      const dateA = a.日付 ? new Date(a.日付).getTime() : 0
+      const dateB = b.日付 ? new Date(b.日付).getTime() : 0
+      if (dateA !== dateB) return dateA - dateB
+      return (a.時限 || "").localeCompare(b.時限 || "")
+    })
 
   const events = sortedData.filter((item) => {
     const content = item[`${filter.year}年${filter.class}クラスの授業内容`]

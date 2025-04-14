@@ -6,6 +6,13 @@ import { useState, useRef } from "react"
 import Papa from "papaparse"
 import { AlertCircle, Check, Upload, X } from "lucide-react"
 
+// CSVパース結果の型定義
+interface ParsedData {
+  data: Record<string, any>[]
+  errors: Papa.ParseError[]
+  meta: Papa.ParseMeta
+}
+
 export default function DataUploader() {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -169,7 +176,7 @@ export default function DataUploader() {
       }
 
       // CSV をパース
-      const { data, errors, meta } = Papa.parse(text, {
+      const parseResult: ParsedData = Papa.parse(text, {
         header: true,
         skipEmptyLines: true,
         delimiter: delimiter,
@@ -206,27 +213,29 @@ export default function DataUploader() {
 
           return trimmed
         },
-      })
+      }) as ParsedData
 
-      if (errors.length > 0) {
-        throw new Error(`ファイルパースエラー: ${errors[0].message}`)
+      // エラーチェック
+      if (parseResult.errors && parseResult.errors.length > 0) {
+        throw new Error(`ファイルパースエラー: ${parseResult.errors[0].message}`)
+      }
+
+      // データチェック
+      if (!parseResult.data || parseResult.data.length === 0) {
+        throw new Error("ファイルにデータが含まれていません")
       }
 
       setProgress(50)
 
-      if (data.length === 0) {
-        throw new Error("ファイルにデータが含まれていません")
-      }
-
       // 必要なフィールドが存在するか確認
       const requiredFields = ["日付", "曜日", "時限"]
-      const missingFields = requiredFields.filter((field) => !meta.fields?.includes(field))
+      const missingFields = requiredFields.filter((field) => !parseResult.meta.fields?.includes(field))
 
       if (missingFields.length > 0) {
         // 時間フィールドがあれば時限として使用
-        if (missingFields.includes("時限") && meta.fields?.includes("時間")) {
+        if (missingFields.includes("時限") && parseResult.meta.fields?.includes("時間")) {
           // データの各行で時間を時限にコピー
-          data.forEach((row) => {
+          parseResult.data.forEach((row) => {
             if (row["時間"] && !row["時限"]) {
               row["時限"] = row["時間"]
             }
@@ -246,7 +255,7 @@ export default function DataUploader() {
       }
 
       // データの検証と前処理
-      const validatedData = data.map((row) => {
+      const validatedData = parseResult.data.map((row) => {
         const newRow = { ...row }
 
         // 日付フォーマットの統一

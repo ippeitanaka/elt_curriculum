@@ -7,9 +7,17 @@ import DatePicker from "./DatePicker"
 import Link from "next/link"
 import { Calendar, Home, Clock, User } from "lucide-react"
 
+// データ項目の型定義
+interface ScheduleItem {
+  日付?: string
+  曜日?: string
+  時限?: string
+  [key: string]: any // その他のプロパティ（クラス情報など）
+}
+
 export default function DailyViewer() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
-  const [data, setData] = useState([])
+  const [data, setData] = useState<ScheduleItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -76,12 +84,16 @@ export default function DailyViewer() {
     return format(date, "yyyy-MM-dd")
   }
 
-  const filteredData = selectedDate ? data.filter((item) => item.日付 === formatDateForFilter(selectedDate)) : []
+  const filteredData = selectedDate
+    ? data.filter((item) => item && item.日付 === formatDateForFilter(selectedDate))
+    : []
 
   // 時限でソート
-  const sortedData = [...filteredData].sort((a, b) => {
-    return a.時限.localeCompare(b.時限)
-  })
+  const sortedData = [...filteredData]
+    .filter((item): item is ScheduleItem => item != null && typeof item === "object" && item.時限 !== undefined)
+    .sort((a, b) => {
+      return (a.時限 || "").localeCompare(b.時限 || "")
+    })
 
   return (
     <div className="max-w-full mx-auto">
@@ -122,7 +134,7 @@ export default function DailyViewer() {
 
           {sortedData.map((item, index) => {
             // 時限を数値に変換（"1" → 1, "2" → 2, ...）
-            const periodNum = Number.parseInt(item.時限.replace(/[^0-9]/g, ""), 10) || 0
+            const periodNum = Number.parseInt((item.時限 || "").replace(/[^0-9]/g, ""), 10) || 0
 
             // 1限～4限は昼間部のみ、5限～6限は夜間部のみ表示
             const showDayClasses = periodNum <= 4
