@@ -1,17 +1,34 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// 環境変数のチェックと Supabase クライアントの作成を関数として分離
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Supabaseの環境変数が設定されていません")
+  if (!supabaseUrl || !supabaseKey) {
+    // エラーを投げる代わりに null を返し、呼び出し側で処理する
+    console.error("Supabaseの環境変数が設定されていません")
+    return null
+  }
+
+  return createClient(supabaseUrl, supabaseKey)
 }
-
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 export async function GET() {
   try {
+    const supabase = getSupabaseClient()
+
+    if (!supabase) {
+      // Supabase クライアントが作成できない場合はエラーレスポンスを返す
+      return NextResponse.json(
+        {
+          error: "Supabase の環境変数が設定されていません。Vercel ダッシュボードで環境変数を設定してください。",
+        },
+        { status: 500 },
+      )
+    }
+
     // 日付の範囲を指定せずに全データを取得
     const { data, error } = await supabase.from("スケジュール").select("*").order("日付", { ascending: true })
 
@@ -27,16 +44,18 @@ export async function GET() {
     // 日付ごとのデータ数を集計
     const dateCount = {}
     data.forEach((item) => {
-      const date = item.日付
-      dateCount[date] = (dateCount[date] || 0) + 1
+      if (item && item.日付) {
+        const date = item.日付
+        dateCount[date] = (dateCount[date] || 0) + 1
+      }
     })
 
     // 日付の範囲を確認
-    const dates = data.map((item) => item.日付)
+    const dates = data.filter((item) => item && item.日付).map((item) => item.日付)
     const uniqueDates = [...new Set(dates)].sort()
 
     // 9月のデータを特に詳しく調査
-    const septemberDates = uniqueDates.filter((date) => date.startsWith("2025-09"))
+    const septemberDates = uniqueDates.filter((date) => date && date.startsWith("2025-09"))
 
     // 最初と最後の10件のデータを抽出
     const firstTenItems = data.slice(0, 10)
