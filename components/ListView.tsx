@@ -17,6 +17,14 @@ const shortenDayOfWeek = (day: string): string => {
   return shortDays[day] || day
 }
 
+// データ項目の型を定義
+interface ScheduleItem {
+  日付?: string
+  曜日?: string
+  時限?: string
+  [key: string]: any // その他のプロパティ（クラス情報など）
+}
+
 export default function ListView({ data, filter, selectedInstructor, showExamsOnly }) {
   // 今日の日付を取得
   const today = format(new Date(), "yyyy-MM-dd")
@@ -27,14 +35,21 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
     if (!data || data.length === 0) return []
 
     return [...data]
-      .filter((item) => item) // null チェック
+      .filter((item): item is ScheduleItem => {
+        // nullまたはundefinedのアイテムをフィルタリング
+        return item != null && typeof item === "object"
+      })
       .sort((a, b) => {
-        if (!a.日付 || !b.日付) return 0
+        // 日付プロパティが存在するか確認
+        const dateA = a.日付 ? new Date(a.日付) : new Date(0)
+        const dateB = b.日付 ? new Date(b.日付) : new Date(0)
 
-        const dateA = new Date(a.日付)
-        const dateB = new Date(b.日付)
         if (dateA.getTime() !== dateB.getTime()) return dateA.getTime() - dateB.getTime()
-        return a.時限?.localeCompare(b.時限 || "") || 0
+
+        // 時限プロパティが存在するか確認
+        const timeA = a.時限 || ""
+        const timeB = b.時限 || ""
+        return timeA.localeCompare(timeB)
       })
       .filter((item) => {
         if (showExamsOnly) {
@@ -87,6 +102,7 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
         </thead>
         <tbody className="text-gray-600 text-[0.6rem] sm:text-xs">
           {sortedData.map((item, index) => {
+            // 日付プロパティが存在するか確認
             if (!item || !item.日付) return null // 無効なデータをスキップ
 
             const date = new Date(item.日付)
