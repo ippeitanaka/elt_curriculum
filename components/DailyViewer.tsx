@@ -111,7 +111,13 @@ export default function DailyViewer() {
           {format(selectedDate || new Date(), "yyyy年MM月dd日 (eee)", { locale: ja })}
           {selectedDate && format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") && (
             <span className="ml-1">
-              <Image src="/images/qyan.png" alt="今日" width={16} height={16} className="inline-block animate-bounce" />
+              <Image
+                src="/images/qyan-transparent.png"
+                alt="今日"
+                width={20}
+                height={20}
+                className="inline-block animate-bounce"
+              />
             </span>
           )}
         </div>

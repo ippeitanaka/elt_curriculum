@@ -168,10 +168,10 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
                   {isToday && (
                     <span className="ml-1 inline-block align-middle">
                       <Image
-                        src="/images/qyan.png"
+                        src="/images/qyan-transparent.png"
                         alt="今日"
-                        width={16}
-                        height={16}
+                        width={20}
+                        height={20}
                         className="inline-block animate-bounce"
                       />
                     </span>
