@@ -29,6 +29,8 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
   // 今日の日付を取得
   const today = format(new Date(), "yyyy-MM-dd")
   const todayRef = useRef<HTMLTableRowElement>(null)
+  const tableRef = useRef<HTMLDivElement>(null)
+  const initialScrollDone = useRef<boolean>(false)
 
   const sortedData = useMemo(() => {
     // データが null または空の場合は空の配列を返す
@@ -66,14 +68,34 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
 
   // コンポーネントがマウントされたとき、または表示モードが変更されたときに今日の日付にスクロール
   useEffect(() => {
-    if (todayRef.current) {
-      // スムーズにスクロール
-      todayRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      })
-    }
-  }, []) // 依存配列を空にして、コンポーネントのマウント時のみ実行
+    // 初回のスクロールのみ実行するためのチェック
+    if (initialScrollDone.current) return
+
+    // 少し遅延させてDOMが完全に描画された後にスクロールする
+    const timer = setTimeout(() => {
+      if (todayRef.current && tableRef.current) {
+        // 今日の日付の位置を取得
+        const todayRect = todayRef.current.getBoundingClientRect()
+        const tableRect = tableRef.current.getBoundingClientRect()
+
+        // テーブルのビューポート内での位置を計算
+        const tableTop = tableRect.top
+        const tableHeight = tableRect.height
+        const windowHeight = window.innerHeight
+
+        // 今日の日付が画面の中央に来るようにスクロール位置を調整
+        const targetScrollTop = todayRect.top - tableTop - windowHeight / 2 + todayRect.height / 2
+
+        // スクロール位置を設定
+        tableRef.current.scrollTop = targetScrollTop
+
+        // スクロールが完了したことをマーク
+        initialScrollDone.current = true
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [sortedData]) // sortedDataが変更されたときに再実行
 
   let currentDate = null
 
@@ -87,9 +109,9 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
   }
 
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+    <div ref={tableRef} className="overflow-auto bg-white rounded-lg shadow-lg max-h-[calc(100vh-12rem)]">
       <table className="min-w-full">
-        <thead>
+        <thead className="sticky top-0 z-10">
           <tr className="bg-gray-100 text-gray-600 uppercase text-[0.5rem] sm:text-[0.65rem] leading-normal">
             <th className="py-1 sm:py-2 px-1 sm:px-3 text-left w-14 sm:w-20">日付</th>
             <th className="py-1 sm:py-2 px-1 sm:px-2 text-left w-6 sm:w-8">曜日</th>
