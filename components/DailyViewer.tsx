@@ -237,7 +237,7 @@ function ClassContent({ item, year, cls }) {
 
   const isExam = periods?.includes("試験")
   const isMockExam = periods?.includes("模試")
-  const isSelfStudy = content === "自宅学習"
+  const isSelfStudy = content === "マイスタディ"
 
   let bgColorClass = "bg-white bg-opacity-70"
   if (isExam) bgColorClass = "bg-red-50"

@@ -145,7 +145,7 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
 
             const isExam = periods.includes("試験")
             const isMockExam = periods.includes("模試")
-            const isSelfStudy = content === "自宅学習"
+            const isSelfStudy = content === "マイスタディ"
 
             // 今日の日付かどうかをチェック
             const isToday = item.日付 === today

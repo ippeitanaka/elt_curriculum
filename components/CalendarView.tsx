@@ -50,7 +50,7 @@ const isHoliday = (date: Date): boolean => {
 
 const getEventColor = (title: string, periods: string): string => {
   if (periods === "試験") return "text-red-800"
-  if (title === "自宅学習") return "text-sky-800"
+  if (title === "マイスタディ") return "text-sky-800"
   if (periods && periods.startsWith("実習")) return "text-pink-800"
   if (!title) return "text-gray-600"
 

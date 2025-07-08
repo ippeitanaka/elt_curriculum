@@ -154,7 +154,7 @@ export default function TeacherSchedule() {
       for (let i = 1; i <= 3; i++) {
         for (const cls of ["A", "B", "N"]) {
           const instructor = item[`${i}年${cls}クラス担当講師名`]
-          if (instructor && instructor !== "試験" && instructor !== "自宅学習") {
+          if (instructor && instructor !== "試験" && instructor !== "マイスタディ") {
             instructorSet.add(instructor)
           }
         }
