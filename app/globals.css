@@ -144,10 +144,29 @@
 }
 
 /* react-big-calendarのデフォルトイベントスタイルを完全に上書き */
-.rbc-event {
+.rbc-event,
+.rbc-event:focus,
+.rbc-event:hover,
+.rbc-event:active,
+.rbc-selected,
+.rbc-selected:focus,
+.rbc-selected:hover,
+.rbc-selected:active {
   border: none !important;
   outline: none !important;
-  box-shadow: none !important;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1) !important;
+  background: inherit !important;
+}
+
+.rbc-event-content {
+  border: none !important;
+  outline: none !important;
+}
+
+/* カスタムイベントクラス */
+.custom-event {
+  border: none !important;
+  outline: none !important;
 }
 
 .rbc-event-content {
