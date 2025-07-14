@@ -85,11 +85,13 @@
 }
 
 .rbc-date-cell {
-  padding: 1px 2px;
+  padding: 2px 4px;
   border-right: 1px solid #e5e7eb;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   min-height: 20px;
+  text-align: left;
+  vertical-align: top;
 }
 
 .rbc-date-cell:last-child {
@@ -260,9 +262,11 @@
   }
 
   .rbc-date-cell {
-    padding: 0.5px 1px;
-    font-size: 0.7rem;
+    padding: 1px 2px;
+    font-size: 0.6rem;
     min-height: 18px;
+    text-align: left;
+    vertical-align: top;
   }
 }
 
