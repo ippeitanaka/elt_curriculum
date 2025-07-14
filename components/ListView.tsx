@@ -145,7 +145,7 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
 
             const isExam = periods.includes("試験")
             const isMockExam = periods.includes("模試")
-            const isSelfStudy = content === "マイスタディ"
+            const isMyStudy = content === "マイスタディ" // 自宅学習からマイスタディに変更
 
             // 今日の日付かどうかをチェック
             const isToday = item.日付 === today
@@ -157,8 +157,8 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
                 className={`
                   ${isExam ? "bg-red-100 hover:bg-red-200" : ""}
                   ${isMockExam && !isExam ? "bg-orange-100 hover:bg-orange-200" : ""}
-                  ${isSelfStudy && !isExam && !isMockExam ? "bg-sky-100 hover:bg-sky-200" : ""}
-                  ${!isExam && !isMockExam && !isSelfStudy ? "hover:bg-gray-50" : ""}
+                  ${isMyStudy && !isExam && !isMockExam ? "bg-sky-100 hover:bg-sky-200" : ""} // マイスタディの背景色
+                  ${!isExam && !isMockExam && !isMyStudy ? "hover:bg-gray-50" : ""}
                   ${isNewDate ? "border-t border-gray-300" : ""}
                   ${isToday ? "bg-yellow-50 hover:bg-yellow-100" : ""} // 今日の日付をハイライト
                 `}

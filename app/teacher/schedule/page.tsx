@@ -155,6 +155,7 @@ export default function TeacherSchedule() {
         for (const cls of ["A", "B", "N"]) {
           const instructor = item[`${i}年${cls}クラス担当講師名`]
           if (instructor && instructor !== "試験" && instructor !== "マイスタディ") {
+            // 自宅学習からマイスタディに変更
             instructorSet.add(instructor)
           }
         }
