@@ -199,16 +199,18 @@ export default function CalendarView({ data, filter }) {
     )
   }
 
-  // カレンダーの高さを自動調整 - スクロール可能に
+  // カレンダーの高さを画面サイズに合わせて最大化 - 更に大きく
   return (
-    <div className={`min-h-[1200px] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}>
+    <div
+      className={`h-[calc(100vh-90px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}
+    >
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{
-          height: "1200px", // 固定の高さを設定
+          height: "100%",
           fontSize: "0.75rem",
         }}
         messages={messages}

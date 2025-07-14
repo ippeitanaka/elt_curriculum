@@ -59,7 +59,7 @@
   }
 }
 
-/* カレンダーの改善されたスタイル - 高さを大きく */
+/* カレンダーの改善されたスタイル - 最大化版 */
 .rbc-calendar {
   font-family: var(--font-mplus-rounded), sans-serif;
   background: white;
@@ -141,12 +141,10 @@
   color: #dc2626 !important;
 }
 
-/* 日付セルの高さを大幅に増加 */
 .rbc-day-bg {
   border-right: 1px solid #e5e7eb;
   border-bottom: 1px solid #e5e7eb;
-  min-height: 180px; /* 大幅に高さを増加 */
-  height: 180px;
+  min-height: calc((100vh - 150px) / 6);
 }
 
 .rbc-day-bg:last-child {
@@ -162,18 +160,17 @@
   background-color: #f9fafb;
 }
 
-/* 月の行の高さも増加 */
 .rbc-month-row {
   border-bottom: 1px solid #e5e7eb;
-  height: 180px; /* 高さを固定 */
-  min-height: 180px;
+  height: calc((100vh - 150px) / 6);
+  min-height: calc((100vh - 150px) / 6);
 }
 
 .rbc-month-row:last-child {
   border-bottom: none;
 }
 
-/* イベントのスタイリング - 複数行表示対応 */
+/* イベントのスタイリング - シンプル版 */
 .calendar-event {
   border-radius: 3px;
   margin: 0.5px;
@@ -190,10 +187,6 @@
   line-height: 1.1;
   min-height: 16px;
   margin-top: 18px; /* 日付の下にイベントを表示するためのマージン */
-  margin-bottom: 1px; /* イベント間の間隔 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* react-big-calendarのデフォルトイベントスタイルを完全に上書き */
@@ -278,7 +271,7 @@
   background-color: #fef2f2;
 }
 
-/* モバイル対応 - 高さを調整 */
+/* モバイル対応 - アイコンを非表示にして講義名を最大表示 */
 @media (max-width: 768px) {
   .rbc-calendar {
     font-size: 0.65rem;
@@ -291,13 +284,12 @@
   }
 
   .rbc-day-bg {
-    min-height: 140px; /* モバイルでも十分な高さを確保 */
-    height: 140px;
+    min-height: calc((100vh - 120px) / 6);
   }
 
   .rbc-month-row {
-    height: 140px;
-    min-height: 140px;
+    height: calc((100vh - 120px) / 6);
+    min-height: calc((100vh - 120px) / 6);
   }
 
   .calendar-event {
@@ -307,7 +299,6 @@
     min-height: 14px;
     gap: 0; /* モバイルではアイコンとテキストの間隔をなくす */
     margin-top: 16px; /* モバイルでは日付の下のマージンを小さく */
-    margin-bottom: 0.5px;
   }
 
   /* モバイルではアイコンを非表示 */
@@ -328,16 +319,15 @@
   }
 }
 
-/* タブレット対応 - 高さを調整 */
+/* タブレット対応 - アイコンは表示するが小さく */
 @media (min-width: 769px) and (max-width: 1024px) {
   .rbc-day-bg {
-    min-height: 160px;
-    height: 160px;
+    min-height: calc((100vh - 130px) / 6);
   }
 
   .rbc-month-row {
-    height: 160px;
-    min-height: 160px;
+    height: calc((100vh - 130px) / 6);
+    min-height: calc((100vh - 130px) / 6);
   }
 
   .calendar-event {
