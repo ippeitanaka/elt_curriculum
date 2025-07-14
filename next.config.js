@@ -19,7 +19,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    appDir: true,
+    // 他に experimental オプションが必要ならここへ記載
   },
   // TypeScriptのビルドエラーを無視する設定を追加
   typescript: {

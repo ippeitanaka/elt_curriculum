@@ -145,10 +145,15 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
 
             const isExam = periods.includes("試験")
             const isMockExam = periods.includes("模試")
-            const isMyStudy = content === "マイスタディ" // 自宅学習からマイスタディに変更
+            const isMyStudy = content === "マイスタディ" || content === "自宅学習"
 
             // 今日の日付かどうかをチェック
             const isToday = item.日付 === today
+
+            let bgColorClass = "bg-white bg-opacity-70"
+            if (isExam) bgColorClass = "bg-red-50"
+            else if (isMockExam) bgColorClass = "bg-orange-50"
+            else if (isMyStudy) bgColorClass = "bg-sky-50"
 
             return (
               <tr

@@ -50,7 +50,7 @@ const isHoliday = (date: Date): boolean => {
 
 const getEventColor = (title: string, periods: string): string => {
   if (periods === "試験") return "text-red-800"
-  if (title === "マイスタディ") return "text-sky-800" // 自宅学習からマイスタディに変更
+  if (title === "マイスタディ" || title === "自宅学習") return "text-sky-800"
   if (periods && periods.startsWith("実習")) return "text-pink-800"
   if (!title) return "text-gray-600"
 
@@ -132,6 +132,7 @@ export default function CalendarView({ data, filter }) {
           "calendar-event text-[0.4rem] sm:text-[0.5rem] py-0 px-0.5 w-full bg-white",
           colorClass,
           event.isExam && "bg-red-100 font-semibold",
+          (event.title === "マイスタディ" || event.title === "自宅学習") && "bg-sky-100",
         )}
         onClick={(e) => {
           e.stopPropagation()
