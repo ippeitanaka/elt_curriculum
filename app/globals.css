@@ -132,6 +132,7 @@
   padding: 1px 3px;
   font-size: 0.65rem;
   font-weight: 500;
+  border: none !important;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -140,6 +141,16 @@
   gap: 2px;
   line-height: 1.1;
   min-height: 16px;
+}
+
+/* react-big-calendarのデフォルトイベントスタイルを上書き */
+.rbc-event {
+  border: none !important;
+  outline: none !important;
+}
+
+.rbc-event-content {
+  border: none !important;
 }
 
 .calendar-event:hover {
