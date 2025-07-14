@@ -59,12 +59,12 @@
   }
 }
 
-/* カレンダーの改善されたスタイル - フルスクリーン対応 */
+/* カレンダーの改善されたスタイル - 最大化版 */
 .rbc-calendar {
   font-family: var(--font-mplus-rounded), sans-serif;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
   overflow: hidden;
   height: 100%;
 }
@@ -73,10 +73,10 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
-  padding: 6px 4px;
+  padding: 4px 2px;
   border: none;
-  font-size: 0.8rem;
-  min-height: 32px;
+  font-size: 0.75rem;
+  min-height: 28px;
 }
 
 .rbc-month-view {
@@ -85,11 +85,11 @@
 }
 
 .rbc-date-cell {
-  padding: 2px 4px;
+  padding: 1px 2px;
   border-right: 1px solid #e5e7eb;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  min-height: 24px;
+  min-height: 20px;
 }
 
 .rbc-date-cell:last-child {
@@ -99,7 +99,7 @@
 .rbc-day-bg {
   border-right: 1px solid #e5e7eb;
   border-bottom: 1px solid #e5e7eb;
-  min-height: calc((100vh - 180px) / 6);
+  min-height: calc((100vh - 150px) / 6);
 }
 
 .rbc-day-bg:last-child {
@@ -117,20 +117,20 @@
 
 .rbc-month-row {
   border-bottom: 1px solid #e5e7eb;
-  height: calc((100vh - 180px) / 6);
-  min-height: calc((100vh - 180px) / 6);
+  height: calc((100vh - 150px) / 6);
+  min-height: calc((100vh - 150px) / 6);
 }
 
 .rbc-month-row:last-child {
   border-bottom: none;
 }
 
-/* イベントのスタイリング - コンパクト版 */
+/* イベントのスタイリング - 更にコンパクト */
 .calendar-event {
-  border-radius: 4px;
-  margin: 1px;
-  padding: 1px 4px;
-  font-size: 0.7rem;
+  border-radius: 3px;
+  margin: 0.5px;
+  padding: 1px 3px;
+  font-size: 0.65rem;
   font-weight: 500;
   border: none;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1);
@@ -139,8 +139,8 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  line-height: 1.2;
-  min-height: 18px;
+  line-height: 1.1;
+  min-height: 16px;
 }
 
 .calendar-event:hover {
@@ -225,50 +225,50 @@
   background-color: #fef2f2;
 }
 
-/* モバイル対応 - より積極的な高さ調整 */
+/* モバイル対応 - 更に積極的な高さ調整 */
 @media (max-width: 768px) {
   .rbc-calendar {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 
   .rbc-header {
-    padding: 4px 2px;
-    font-size: 0.7rem;
-    min-height: 28px;
+    padding: 3px 1px;
+    font-size: 0.65rem;
+    min-height: 24px;
   }
 
   .rbc-day-bg {
-    min-height: calc((100vh - 140px) / 6);
+    min-height: calc((100vh - 120px) / 6);
   }
 
   .rbc-month-row {
-    height: calc((100vh - 140px) / 6);
-    min-height: calc((100vh - 140px) / 6);
+    height: calc((100vh - 120px) / 6);
+    min-height: calc((100vh - 120px) / 6);
   }
 
   .calendar-event {
-    font-size: 0.6rem;
-    padding: 1px 2px;
-    margin: 0.5px;
-    min-height: 16px;
+    font-size: 0.55rem;
+    padding: 0.5px 2px;
+    margin: 0.25px;
+    min-height: 14px;
   }
 
   .rbc-date-cell {
-    padding: 1px 2px;
-    font-size: 0.8rem;
-    min-height: 20px;
+    padding: 0.5px 1px;
+    font-size: 0.7rem;
+    min-height: 18px;
   }
 }
 
 /* タブレット対応 */
 @media (min-width: 769px) and (max-width: 1024px) {
   .rbc-day-bg {
-    min-height: calc((100vh - 160px) / 6);
+    min-height: calc((100vh - 130px) / 6);
   }
 
   .rbc-month-row {
-    height: calc((100vh - 160px) / 6);
-    min-height: calc((100vh - 160px) / 6);
+    height: calc((100vh - 130px) / 6);
+    min-height: calc((100vh - 130px) / 6);
   }
 }
 

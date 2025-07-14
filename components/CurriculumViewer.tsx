@@ -277,12 +277,12 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
 
   if (error) {
     return (
-      <div className="text-center text-red-600 bg-red-50 p-6 rounded-xl border border-red-200">
-        <p className="text-lg font-medium mb-4">エラーが発生しました</p>
-        <p className="text-sm mb-4">{error}</p>
+      <div className="text-center text-red-600 bg-red-50 p-4 rounded-lg border border-red-200">
+        <p className="text-sm font-medium mb-2">エラーが発生しました</p>
+        <p className="text-xs mb-2">{error}</p>
         <button
           onClick={fetchData}
-          className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
+          className="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 transition-colors"
         >
           再試行
         </button>
@@ -292,17 +292,17 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
 
   if (isLoading && data.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-        <p className="text-lg font-medium text-gray-700">データを読み込んでいます...</p>
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto mb-2"></div>
+        <p className="text-sm font-medium text-gray-700">データを読み込んでいます...</p>
       </div>
     )
   }
 
   if (!data || data.length === 0) {
     return (
-      <div className="text-center py-12 bg-yellow-50 rounded-xl border border-yellow-200">
-        <p className="text-lg font-medium text-yellow-800">データが見つかりません。</p>
+      <div className="text-center py-8 bg-yellow-50 rounded-lg border border-yellow-200">
+        <p className="text-sm font-medium text-yellow-800">データが見つかりません。</p>
       </div>
     )
   }
@@ -329,27 +329,28 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
   // コンテナの高さとパディングを最小化
   return (
     <div className={`max-w-7xl mx-auto ${mplusRounded.variable}`}>
-      {/* プレビュー環境での注意書き */}
+      {/* プレビュー環境での注意書き - 更にコンパクト */}
       {typeof window !== "undefined" && window.location.hostname.includes("v0.dev") && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-2">
-          <p className="text-blue-800 text-sm">
-            <strong>プレビュー環境:</strong> 実際のデータベースに接続できないため、サンプルデータを表示しています。
+        <div className="bg-blue-50 border border-blue-200 rounded p-1 mb-1">
+          <p className="text-blue-800 text-xs">
+            <strong>プレビュー:</strong> サンプルデータを表示中
           </p>
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-2 mb-2">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+      {/* フィルター部分を更にコンパクト */}
+      <div className="bg-white rounded shadow-sm border border-gray-200 p-1 mb-1">
+        <div className="flex flex-wrap items-center justify-between gap-1">
+          <div className="flex items-center gap-1">
             <FilterComponent filter={filter} setFilter={setFilter} />
             {view === "list" && (
               <button
                 onClick={() => setShowExamsOnly(!showExamsOnly)}
-                className={`px-2 py-1 text-sm font-medium rounded-lg transition-colors ${
-                  showExamsOnly ? "bg-blue-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                  showExamsOnly ? "bg-blue-500 text-white shadow-sm" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                {showExamsOnly ? "全ての日程" : "試験・模試のみ"}
+                {showExamsOnly ? "全て" : "試験のみ"}
               </button>
             )}
           </div>

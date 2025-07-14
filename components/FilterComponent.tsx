@@ -10,13 +10,13 @@ type FilterProps = {
 
 export default function FilterComponent({ filter, setFilter }: FilterProps) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex items-center gap-2">
-        <GraduationCap size={18} className="text-blue-500" />
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
+        <GraduationCap size={14} className="text-blue-500" />
         <select
           value={filter.year}
           onChange={(e) => setFilter({ ...filter, year: e.target.value })}
-          className="border-2 border-blue-200 rounded-lg px-3 py-2 text-sm font-medium bg-white hover:border-blue-300 focus:border-blue-500 focus:outline-none transition-colors"
+          className="border border-blue-200 rounded px-2 py-1 text-xs font-medium bg-white hover:border-blue-300 focus:border-blue-500 focus:outline-none transition-colors"
         >
           <option value="1">1年</option>
           <option value="2">2年</option>
@@ -24,12 +24,12 @@ export default function FilterComponent({ filter, setFilter }: FilterProps) {
         </select>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Users size={18} className="text-purple-500" />
+      <div className="flex items-center gap-1">
+        <Users size={14} className="text-purple-500" />
         <select
           value={filter.class}
           onChange={(e) => setFilter({ ...filter, class: e.target.value })}
-          className="border-2 border-purple-200 rounded-lg px-3 py-2 text-sm font-medium bg-white hover:border-purple-300 focus:border-purple-500 focus:outline-none transition-colors"
+          className="border border-purple-200 rounded px-2 py-1 text-xs font-medium bg-white hover:border-purple-300 focus:border-purple-500 focus:outline-none transition-colors"
         >
           <option value="A">Aクラス</option>
           <option value="B">Bクラス</option>

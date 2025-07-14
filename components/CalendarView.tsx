@@ -198,10 +198,10 @@ export default function CalendarView({ data, filter }) {
     )
   }
 
-  // カレンダーの高さを画面サイズに合わせて最大化
+  // カレンダーの高さを画面サイズに合わせて最大化 - 更に大きく
   return (
     <div
-      className={`h-[calc(100vh-120px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded-lg p-2 ${mplusRounded.variable}`}
+      className={`h-[calc(100vh-90px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}
     >
       <Calendar
         localizer={localizer}
@@ -210,7 +210,7 @@ export default function CalendarView({ data, filter }) {
         endAccessor="end"
         style={{
           height: "100%",
-          fontSize: "0.8rem",
+          fontSize: "0.75rem",
         }}
         messages={messages}
         view={Views.MONTH}
