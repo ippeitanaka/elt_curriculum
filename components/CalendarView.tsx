@@ -161,6 +161,11 @@ export default function CalendarView({ data, filter }) {
     return (
       <div
         className={cn("calendar-event", eventClass)}
+        style={{
+          border: "none",
+          outline: "none",
+          boxShadow: "none",
+        }}
         onClick={(e) => {
           e.stopPropagation()
           setSelectedEvent(event)
