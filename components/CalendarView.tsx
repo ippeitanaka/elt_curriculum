@@ -8,6 +8,18 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { M_PLUS_Rounded_1c } from "next/font/google"
+import {
+  BookOpen,
+  FlaskConical,
+  GraduationCap,
+  Heart,
+  Stethoscope,
+  UserCheck,
+  Zap,
+  Clock,
+  User,
+  CalendarIcon,
+} from "lucide-react"
 
 moment.locale("ja")
 const localizer = momentLocalizer(moment)
@@ -48,20 +60,29 @@ const isHoliday = (date: Date): boolean => {
   return holidays.includes(formattedDate)
 }
 
-const getEventColor = (title: string, periods: string): string => {
-  if (periods === "試験") return "text-red-800"
-  if (title === "マイスタディ" || title === "自宅学習") return "text-sky-800"
-  if (periods && periods.startsWith("実習")) return "text-pink-800"
-  if (!title) return "text-gray-600"
+const getEventIcon = (title: string, periods: string) => {
+  if (periods === "試験") return <GraduationCap size={12} />
+  if (periods?.includes("模試")) return <BookOpen size={12} />
+  if (title === "マイスタディ" || title === "自宅学習") return <UserCheck size={12} />
+  if (periods?.startsWith("実習")) return <FlaskConical size={12} />
+  if (title?.includes("解剖")) return <Heart size={12} />
+  if (title?.includes("生理")) return <Stethoscope size={12} />
+  if (title?.includes("救急")) return <Zap size={12} />
+  return <BookOpen size={12} />
+}
 
-  if (title.includes("演習")) return "text-purple-800"
-  if (title.includes("講義")) return "text-blue-800"
-  if (title.includes("解剖")) return "text-green-800"
-  if (title.includes("生理")) return "text-yellow-800"
-  if (title.includes("救急")) return "text-orange-800"
-  if (title.includes("外傷")) return "text-indigo-800"
-
-  return "text-gray-600"
+const getEventClass = (title: string, periods: string): string => {
+  if (periods === "試験") return "event-exam"
+  if (periods?.includes("模試")) return "event-mock-exam"
+  if (title === "マイスタディ" || title === "自宅学習") return "event-my-study"
+  if (periods?.startsWith("実習")) return "event-practice"
+  if (title?.includes("演習")) return "event-exercise"
+  if (title?.includes("講義")) return "event-lecture"
+  if (title?.includes("解剖")) return "event-anatomy"
+  if (title?.includes("生理")) return "event-physiology"
+  if (title?.includes("救急")) return "event-emergency"
+  if (title?.includes("外傷")) return "event-trauma"
+  return "event-default"
 }
 
 export default function CalendarView({ data, filter }) {
@@ -84,12 +105,15 @@ export default function CalendarView({ data, filter }) {
       const date = new Date(item.日付)
       const content = item[`${filter.year}年${filter.class}クラスの授業内容`]
       const periods = item[`${filter.year}年${filter.class}クラスコマ数`]
+      const teacher = item[`${filter.year}年${filter.class}クラス担当講師名`]
       const isExam = periods === "試験"
+
       return {
         title: isExam ? `${content} 試験` : content,
         start: date,
         end: date,
         periods: periods,
+        teacher: teacher,
         timeSlot: item.時限,
         resource: item,
         isExam: isExam,
@@ -110,42 +134,75 @@ export default function CalendarView({ data, filter }) {
     const isSaturday = dayOfWeek === 6
     const isSunday = dayOfWeek === 0
     const isHolidayDate = isHoliday(date)
+    const isToday = moment(date).isSame(moment(), "day")
+
+    let className = ""
+    if (isSaturday) className += " saturday"
+    if (isSunday || isHolidayDate) className += " sunday holiday"
 
     return {
-      className: cn(isSaturday && "text-blue-600", (isSunday || isHolidayDate) && "text-red-600"),
+      className: cn(
+        className,
+        isSaturday && "text-blue-600",
+        (isSunday || isHolidayDate) && "text-red-600",
+        isToday && "font-bold",
+      ),
       style: {
-        backgroundColor: isSaturday
-          ? "rgba(59, 130, 246, 0.1)"
-          : isSunday || isHolidayDate
-            ? "rgba(239, 68, 68, 0.1)"
-            : undefined,
-        height: 90,
+        backgroundColor: isToday
+          ? "#fef3c7"
+          : isSaturday
+            ? "#eff6ff"
+            : isSunday || isHolidayDate
+              ? "#fef2f2"
+              : undefined,
+        minHeight: 120,
       },
     }
   }
 
   const EventComponent = ({ event }) => {
-    const colorClass = getEventColor(event.title, event.periods)
+    const eventClass = getEventClass(event.title, event.periods)
+    const icon = getEventIcon(event.title, event.periods)
+
     return (
       <div
-        className={cn(
-          "calendar-event text-[0.4rem] sm:text-[0.5rem] py-0 px-0.5 w-full bg-white",
-          colorClass,
-          event.isExam && "bg-red-100 font-semibold",
-          (event.title === "マイスタディ" || event.title === "自宅学習") && "bg-sky-100",
-        )}
+        className={cn("calendar-event", eventClass)}
         onClick={(e) => {
           e.stopPropagation()
           setSelectedEvent(event)
         }}
       >
-        <span className="truncate block">{event.title}</span>
+        {icon}
+        <span className="truncate flex-1">{event.title}</span>
+      </div>
+    )
+  }
+
+  const customDateHeader = ({ date, label }) => {
+    const dayOfWeek = date.getDay()
+    const isSaturday = dayOfWeek === 6
+    const isSunday = dayOfWeek === 0
+    const isHolidayDate = isHoliday(date)
+    const isToday = moment(date).isSame(moment(), "day")
+
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-center h-full font-medium",
+          isSaturday && "text-blue-600",
+          (isSunday || isHolidayDate) && "text-red-600",
+          isToday && "bg-yellow-200 rounded-full w-8 h-8 mx-auto",
+        )}
+      >
+        {label}
       </div>
     )
   }
 
   return (
-    <div className={`h-[calc(100vh-6rem)] bg-white rounded-lg shadow-lg overflow-hidden ${mplusRounded.variable}`}>
+    <div
+      className={`h-[calc(100vh-8rem)] bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 ${mplusRounded.variable}`}
+    >
       <Calendar
         localizer={localizer}
         events={events}
@@ -153,7 +210,7 @@ export default function CalendarView({ data, filter }) {
         endAccessor="end"
         style={{
           height: "100%",
-          fontSize: "0.9rem",
+          fontSize: "0.875rem",
         }}
         messages={messages}
         view={Views.MONTH}
@@ -162,30 +219,59 @@ export default function CalendarView({ data, filter }) {
           monthHeaderFormat: (date, culture, localizer) => localizer.format(date, "YYYY年M月", culture),
           dayFormat: (date, culture, localizer) => {
             const day = localizer.format(date, "ddd", culture)
-            if (day === "土") return <span className="text-blue-600">{localizer.format(date, "D", culture)}</span>
-            if (day === "日") return <span className="text-red-600">{localizer.format(date, "D", culture)}</span>
-            return localizer.format(date, "D", culture)
+            const dayNum = localizer.format(date, "D", culture)
+            if (day === "土") return <span className="text-blue-600 font-medium">{dayNum}</span>
+            if (day === "日") return <span className="text-red-600 font-medium">{dayNum}</span>
+            return <span className="font-medium">{dayNum}</span>
           },
         }}
         dayPropGetter={customDayPropGetter}
         components={{
           event: EventComponent,
+          month: {
+            dateHeader: customDateHeader,
+          },
         }}
         popup={false}
         showAllEvents
       />
+
       <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
-        <DialogContent className="bg-white rounded-lg shadow-xl">
+        <DialogContent className="dialog-content max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">{selectedEvent?.title}</DialogTitle>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              {selectedEvent && getEventIcon(selectedEvent.title, selectedEvent.periods)}
+              {selectedEvent?.title}
+            </DialogTitle>
             <DialogDescription>
-              <div className="space-y-2 mt-2">
-                <p className="text-sm">
-                  <span className="font-medium">時限:</span> {selectedEvent?.timeSlot}
-                </p>
-                <p className="text-sm">
-                  <span className="font-medium">コマ数:</span> {selectedEvent?.periods}
-                </p>
+              <div className="space-y-3 mt-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <Clock size={16} className="text-gray-500" />
+                  <span className="font-medium">時限:</span>
+                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                    {selectedEvent?.timeSlot}
+                  </span>
+                </div>
+
+                {selectedEvent?.teacher && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <User size={16} className="text-gray-500" />
+                    <span className="font-medium">担当講師:</span>
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
+                      {selectedEvent.teacher}
+                    </span>
+                  </div>
+                )}
+
+                {selectedEvent?.periods && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <CalendarIcon size={16} className="text-gray-500" />
+                    <span className="font-medium">コマ数:</span>
+                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">
+                      {selectedEvent.periods}
+                    </span>
+                  </div>
+                )}
               </div>
             </DialogDescription>
           </DialogHeader>
