@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar, momentLocalizer, Views, type Event } from "react-big-calendar"
+import { Calendar, momentLocalizer, Views } from "react-big-calendar"
 import moment from "moment"
 import "moment/locale/ja"
 import "react-big-calendar/lib/css/react-big-calendar.css"
@@ -24,7 +24,7 @@ import {
 moment.locale("ja")
 const localizer = momentLocalizer(moment)
 
-// かわいい丸みのあるフォント
+// かわいい丸みのあるフォントに変更
 const mplusRounded = M_PLUS_Rounded_1c({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
@@ -32,7 +32,7 @@ const mplusRounded = M_PLUS_Rounded_1c({
   variable: "--font-mplus-rounded",
 })
 
-// 日本の祝日（2025）
+// 日本の祝日リスト（2025年分）
 const holidays = [
   "2025-01-01",
   "2025-01-13",
@@ -55,10 +55,12 @@ const holidays = [
   "2025-12-23",
 ]
 
-const isHoliday = (date: Date) => holidays.includes(moment(date).format("YYYY-MM-DD"))
+const isHoliday = (date: Date): boolean => {
+  const formattedDate = moment(date).format("YYYY-MM-DD")
+  return holidays.includes(formattedDate)
+}
 
-/* ---------- アイコンとクラス ---------- */
-const getEventIcon = (title?: string, periods?: string) => {
+const getEventIcon = (title: string, periods: string) => {
   if (periods === "試験") return <GraduationCap size={10} />
   if (periods?.includes("模試")) return <BookOpen size={10} />
   if (title === "マイスタディ" || title === "自宅学習") return <UserCheck size={10} />
@@ -69,81 +71,135 @@ const getEventIcon = (title?: string, periods?: string) => {
   return <BookOpen size={10} />
 }
 
-const getEventClass = (periods?: string) => {
+const getEventClass = (title: string, periods: string): string => {
+  // 試験は赤背景
   if (periods === "試験") return "event-exam"
+  // 模擬試験は黄色背景
   if (periods?.includes("模試")) return "event-mock-exam"
+  // その他はすべて白背景、黒文字
   return "event-default"
 }
 
-/* ----------  メインコンポーネント ---------- */
-type ScheduleItem = Record<string, any>
+export default function CalendarView({ data, filter }) {
+  const [selectedEvent, setSelectedEvent] = useState(null)
 
-interface Props {
-  data: ScheduleItem[]
-  filter: { year: string; class: string }
-}
+  const sortedData = [...data].sort((a, b) => {
+    const dateA = new Date(a.日付)
+    const dateB = new Date(b.日付)
+    if (dateA.getTime() !== dateB.getTime()) return dateA.getTime() - dateB.getTime()
+    return a.時限.localeCompare(b.時限)
+  })
 
-export default function CalendarView({ data, filter }: Props) {
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
-
-  /* ---- イベント配列を生成 ---- */
-  const events = data
-    .filter((row) => {
-      const content = row[`${filter.year}年${filter.class}クラスの授業内容`]
-      const periods = row[`${filter.year}年${filter.class}クラスコマ数`]
+  const events = sortedData
+    .filter((item) => {
+      const content = item[`${filter.year}年${filter.class}クラスの授業内容`]
+      const periods = item[`${filter.year}年${filter.class}クラスコマ数`]
       return content || periods
     })
-    .map((row) => {
-      const date = new Date(row.日付)
-      const title = row[`${filter.year}年${filter.class}クラスの授業内容`] as string | undefined
-      const periods = row[`${filter.year}年${filter.class}クラスコマ数`] as string | undefined
-      const teacher = row[`${filter.year}年${filter.class}クラス担当講師名`] as string | undefined
+    .map((item) => {
+      const date = new Date(item.日付)
+      const content = item[`${filter.year}年${filter.class}クラスの授業内容`]
+      const periods = item[`${filter.year}年${filter.class}クラスコマ数`]
+      const teacher = item[`${filter.year}年${filter.class}クラス担当講師名`]
+      const isExam = periods === "試験"
+
       return {
-        title,
+        title: isExam ? `${content} 試験` : content,
         start: date,
         end: date,
-        periods,
-        teacher,
-        timeSlot: row.時限,
+        periods: periods,
+        teacher: teacher,
+        timeSlot: item.時限,
+        resource: item,
+        isExam: isExam,
       }
     })
 
-  /* ---- 祝日・土日の背景 ---- */
-  const dayPropGetter = (date: Date) => {
-    const dow = date.getDay()
-    const isSat = dow === 6
-    const isSun = dow === 0
-    const isHol = isHoliday(date)
+  const messages = {
+    allDay: "終日",
+    previous: "前へ",
+    next: "次へ",
+    today: "今日",
+    month: "月",
+    noEventsInRange: "この期間にイベントはありません。",
+  }
+
+  const customDayPropGetter = (date: Date) => {
+    const dayOfWeek = date.getDay()
+    const isSaturday = dayOfWeek === 6
+    const isSunday = dayOfWeek === 0
+    const isHolidayDate = isHoliday(date)
     const isToday = moment(date).isSame(moment(), "day")
 
+    let className = ""
+    if (isSaturday) className += " saturday"
+    if (isSunday || isHolidayDate) className += " sunday holiday"
+
     return {
-      className: cn(isSat && "text-blue-600", (isSun || isHol) && "text-red-600", isToday && "font-bold"),
+      className: cn(
+        className,
+        isSaturday && "text-blue-600",
+        (isSunday || isHolidayDate) && "text-red-600",
+        isToday && "font-bold",
+      ),
       style: {
-        backgroundColor: isToday ? "#fef3c7" : isSat ? "#eff6ff" : isSun || isHol ? "#fef2f2" : undefined,
+        backgroundColor: isToday
+          ? "#fef3c7"
+          : isSaturday
+            ? "#eff6ff"
+            : isSunday || isHolidayDate
+              ? "#fef2f2"
+              : undefined,
       },
     }
   }
 
-  /* ---- イベント毎にスタイルを注入 ---- */
-  const eventPropGetter = (_: any, _start: Date, _end: Date, _isSel: boolean) => {
-    return {
-      className: cn("calendar-event", getEventClass(_.periods)),
-      style: {
-        border: "none",
-        outline: "none",
-        boxShadow: "none",
-      },
-    }
+  const EventComponent = ({ event }) => {
+    const eventClass = getEventClass(event.title, event.periods)
+    const icon = getEventIcon(event.title, event.periods)
+
+    return (
+      <div
+        className={cn("calendar-event", eventClass)}
+        style={{
+          border: "none",
+          outline: "none",
+          boxShadow: "none",
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+          setSelectedEvent(event)
+        }}
+      >
+        {/* アイコンにクラスを追加してレスポンシブ制御 */}
+        <span className="calendar-event-icon">{icon}</span>
+        <span className="truncate flex-1">{event.title}</span>
+      </div>
+    )
   }
 
-  /* ---- カスタムイベントレンダラー ---- */
-  const EventRenderer = ({ event }: { event: any }) => (
-    <div className="flex items-center gap-1 truncate">
-      <span className="calendar-event-icon">{getEventIcon(event.title, event.periods)}</span>
-      <span className="truncate flex-1">{event.title}</span>
-    </div>
-  )
+  const customDateHeader = ({ date, label }) => {
+    const dayOfWeek = date.getDay()
+    const isSaturday = dayOfWeek === 6
+    const isSunday = dayOfWeek === 0
+    const isHolidayDate = isHoliday(date)
+    const isToday = moment(date).isSame(moment(), "day")
 
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-center h-full font-medium text-sm",
+          isSaturday && "text-blue-600",
+          (isSunday || isHolidayDate) && "text-red-600",
+          isToday && "bg-yellow-200 rounded-full w-6 h-6 mx-auto text-xs",
+        )}
+      >
+        {label}
+      </div>
+    )
+  }
+
+  // カレンダーの高さを画面サイズに合わせて最大化 - 更に大きく
   return (
     <div
       className={`h-[calc(100vh-90px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}
@@ -153,31 +209,34 @@ export default function CalendarView({ data, filter }: Props) {
         events={events}
         startAccessor="start"
         endAccessor="end"
+        style={{
+          height: "100%",
+          fontSize: "0.75rem",
+        }}
+        messages={messages}
         view={Views.MONTH}
         views={[Views.MONTH]}
-        dayPropGetter={dayPropGetter}
-        eventPropGetter={eventPropGetter}
+        formats={{
+          monthHeaderFormat: (date, culture, localizer) => localizer.format(date, "YYYY年M月", culture),
+          dayFormat: (date, culture, localizer) => {
+            const day = localizer.format(date, "ddd", culture)
+            const dayNum = localizer.format(date, "D", culture)
+            if (day === "土") return <span className="text-blue-600 font-medium text-sm">{dayNum}</span>
+            if (day === "日") return <span className="text-red-600 font-medium text-sm">{dayNum}</span>
+            return <span className="font-medium text-sm">{dayNum}</span>
+          },
+        }}
+        dayPropGetter={customDayPropGetter}
         components={{
-          event: EventRenderer,
+          event: EventComponent,
+          month: {
+            dateHeader: customDateHeader,
+          },
         }}
         popup={false}
-        messages={{
-          allDay: "終日",
-          previous: "前へ",
-          next: "次へ",
-          today: "今日",
-          month: "月",
-          noEventsInRange: "この期間にイベントはありません。",
-        }}
-        formats={{
-          monthHeaderFormat: (date, culture, loc) => loc.format(date, "YYYY年M月", culture),
-          dayFormat: (date, culture, loc) => loc.format(date, "D", culture),
-        }}
-        style={{ height: "100%", fontSize: "0.75rem" }}
-        onSelectEvent={(ev) => setSelectedEvent(ev)}
+        showAllEvents
       />
 
-      {/* ---------- モーダル ---------- */}
       <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
         <DialogContent className="dialog-content max-w-md">
           <DialogHeader>
@@ -186,30 +245,30 @@ export default function CalendarView({ data, filter }: Props) {
               {selectedEvent?.title}
             </DialogTitle>
             <DialogDescription>
-              <div className="space-y-2 mt-3 text-sm">
-                {selectedEvent?.timeSlot && (
-                  <div className="flex items-center gap-2">
-                    <Clock size={14} className="text-gray-500" />
-                    <span>時限:</span>
-                    <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs">
-                      {selectedEvent.timeSlot}
-                    </span>
-                  </div>
-                )}
+              <div className="space-y-2 mt-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Clock size={14} className="text-gray-500" />
+                  <span className="font-medium">時限:</span>
+                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                    {selectedEvent?.timeSlot}
+                  </span>
+                </div>
+
                 {selectedEvent?.teacher && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-sm">
                     <User size={14} className="text-gray-500" />
-                    <span>担当講師:</span>
-                    <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs">
+                    <span className="font-medium">担当講師:</span>
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
                       {selectedEvent.teacher}
                     </span>
                   </div>
                 )}
+
                 {selectedEvent?.periods && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-sm">
                     <CalendarIcon size={14} className="text-gray-500" />
-                    <span>コマ数:</span>
-                    <span className="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full text-xs">
+                    <span className="font-medium">コマ数:</span>
+                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">
                       {selectedEvent.periods}
                     </span>
                   </div>
