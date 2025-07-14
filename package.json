@@ -18,10 +18,11 @@
     "date-fns": "latest",
     "dom-helpers": "^5.2.1",
     "lucide-react": "^0.454.0",
+    "moment": "latest",
     "next": "14.2.16",
     "papaparse": "latest",
     "react": "^18",
-    "react-big-calendar": "^1.8.5",
+    "react-big-calendar": "latest",
     "react-dom": "^18",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
