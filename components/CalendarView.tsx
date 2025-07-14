@@ -72,17 +72,11 @@ const getEventIcon = (title: string, periods: string) => {
 }
 
 const getEventClass = (title: string, periods: string): string => {
+  // 試験は赤背景
   if (periods === "試験") return "event-exam"
+  // 模擬試験は黄色背景
   if (periods?.includes("模試")) return "event-mock-exam"
-  if (title === "マイスタディ" || title === "自宅学習") return "event-my-study"
-  // 実習の判定を拡張：コマ数が「実習」で始まる、または講義名に「実習」が含まれる
-  if (periods?.startsWith("実習") || title?.includes("実習")) return "event-practice"
-  if (title?.includes("演習")) return "event-exercise"
-  if (title?.includes("講義")) return "event-lecture"
-  if (title?.includes("解剖")) return "event-anatomy"
-  if (title?.includes("生理")) return "event-physiology"
-  if (title?.includes("救急")) return "event-emergency"
-  if (title?.includes("外傷")) return "event-trauma"
+  // その他はすべて白背景、黒文字
   return "event-default"
 }
 

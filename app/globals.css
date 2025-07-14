@@ -125,14 +125,14 @@
   border-bottom: none;
 }
 
-/* イベントのスタイリング - アイコンのレスポンシブ対応 */
+/* イベントのスタイリング - シンプル版 */
 .calendar-event {
   border-radius: 3px;
   margin: 0.5px;
   padding: 1px 3px;
   font-size: 0.65rem;
   font-weight: 500;
-  border: none;
+  border: 1px solid #e5e7eb;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -153,71 +153,23 @@
   flex-shrink: 0;
 }
 
-/* 授業タイプ別の色分け */
+/* シンプルな色分け - 試験と模擬試験のみ背景色変更 */
 .event-exam {
-  background: linear-gradient(135deg, #fee2e2, #fecaca);
-  color: #991b1b;
-  border-left: 2px solid #dc2626;
+  background: #fee2e2;
+  color: #000000;
+  border: 1px solid #dc2626;
 }
 
 .event-mock-exam {
-  background: linear-gradient(135deg, #fed7aa, #fdba74);
-  color: #9a3412;
-  border-left: 2px solid #ea580c;
-}
-
-.event-my-study {
-  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-  color: #1e40af;
-  border-left: 2px solid #3b82f6;
-}
-
-.event-practice {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  color: #92400e;
-  border-left: 2px solid #f59e0b;
-}
-
-.event-lecture {
-  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-  color: #3730a3;
-  border-left: 2px solid #6366f1;
-}
-
-.event-exercise {
-  background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
-  color: #6b21a8;
-  border-left: 2px solid #9333ea;
-}
-
-.event-anatomy {
-  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-  color: #166534;
-  border-left: 2px solid #22c55e;
-}
-
-.event-physiology {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  color: #92400e;
-  border-left: 2px solid #f59e0b;
-}
-
-.event-emergency {
-  background: linear-gradient(135deg, #fed7d7, #fbb6ce);
-  color: #be123c;
-  border-left: 2px solid #f43f5e;
-}
-
-.event-trauma {
-  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-  color: #0c4a6e;
-  border-left: 2px solid #0284c7;
+  background: #fef3c7;
+  color: #000000;
+  border: 1px solid #f59e0b;
 }
 
 .event-default {
-  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-  color: #475569;
-  border-left: 2px solid #64748b;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #e5e7eb;
 }
 
 /* 土日祝日のスタイリング */
