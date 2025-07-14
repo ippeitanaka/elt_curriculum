@@ -59,11 +59,11 @@
   }
 }
 
-/* カレンダーの改善されたスタイル - コンパクト版 */
+/* カレンダーの改善されたスタイル - フルスクリーン対応 */
 .rbc-calendar {
   font-family: var(--font-mplus-rounded), sans-serif;
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   overflow: hidden;
   height: 100%;
@@ -73,9 +73,10 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
-  padding: 8px 4px;
+  padding: 6px 4px;
   border: none;
   font-size: 0.8rem;
+  min-height: 32px;
 }
 
 .rbc-month-view {
@@ -84,10 +85,11 @@
 }
 
 .rbc-date-cell {
-  padding: 4px;
+  padding: 2px 4px;
   border-right: 1px solid #e5e7eb;
   font-size: 0.9rem;
   font-weight: 600;
+  min-height: 24px;
 }
 
 .rbc-date-cell:last-child {
@@ -97,7 +99,7 @@
 .rbc-day-bg {
   border-right: 1px solid #e5e7eb;
   border-bottom: 1px solid #e5e7eb;
-  min-height: 90px;
+  min-height: calc((100vh - 180px) / 6);
 }
 
 .rbc-day-bg:last-child {
@@ -115,8 +117,8 @@
 
 .rbc-month-row {
   border-bottom: 1px solid #e5e7eb;
-  height: calc((100vh - 280px) / 6);
-  min-height: 90px;
+  height: calc((100vh - 180px) / 6);
+  min-height: calc((100vh - 180px) / 6);
 }
 
 .rbc-month-row:last-child {
@@ -138,6 +140,7 @@
   align-items: center;
   gap: 2px;
   line-height: 1.2;
+  min-height: 18px;
 }
 
 .calendar-event:hover {
@@ -222,35 +225,50 @@
   background-color: #fef2f2;
 }
 
-/* モバイル対応 */
+/* モバイル対応 - より積極的な高さ調整 */
 @media (max-width: 768px) {
   .rbc-calendar {
     font-size: 0.7rem;
   }
 
   .rbc-header {
-    padding: 6px 2px;
+    padding: 4px 2px;
     font-size: 0.7rem;
+    min-height: 28px;
   }
 
   .rbc-day-bg {
-    min-height: 70px;
+    min-height: calc((100vh - 140px) / 6);
   }
 
   .rbc-month-row {
-    height: calc((100vh - 240px) / 6);
-    min-height: 70px;
+    height: calc((100vh - 140px) / 6);
+    min-height: calc((100vh - 140px) / 6);
   }
 
   .calendar-event {
     font-size: 0.6rem;
     padding: 1px 2px;
     margin: 0.5px;
+    min-height: 16px;
   }
 
   .rbc-date-cell {
-    padding: 2px;
+    padding: 1px 2px;
     font-size: 0.8rem;
+    min-height: 20px;
+  }
+}
+
+/* タブレット対応 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .rbc-day-bg {
+    min-height: calc((100vh - 160px) / 6);
+  }
+
+  .rbc-month-row {
+    height: calc((100vh - 160px) / 6);
+    min-height: calc((100vh - 160px) / 6);
   }
 }
 

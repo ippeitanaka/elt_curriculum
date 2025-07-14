@@ -61,14 +61,14 @@ const isHoliday = (date: Date): boolean => {
 }
 
 const getEventIcon = (title: string, periods: string) => {
-  if (periods === "試験") return <GraduationCap size={12} />
-  if (periods?.includes("模試")) return <BookOpen size={12} />
-  if (title === "マイスタディ" || title === "自宅学習") return <UserCheck size={12} />
-  if (periods?.startsWith("実習")) return <FlaskConical size={12} />
-  if (title?.includes("解剖")) return <Heart size={12} />
-  if (title?.includes("生理")) return <Stethoscope size={12} />
-  if (title?.includes("救急")) return <Zap size={12} />
-  return <BookOpen size={12} />
+  if (periods === "試験") return <GraduationCap size={10} />
+  if (periods?.includes("模試")) return <BookOpen size={10} />
+  if (title === "マイスタディ" || title === "自宅学習") return <UserCheck size={10} />
+  if (periods?.startsWith("実習")) return <FlaskConical size={10} />
+  if (title?.includes("解剖")) return <Heart size={10} />
+  if (title?.includes("生理")) return <Stethoscope size={10} />
+  if (title?.includes("救急")) return <Zap size={10} />
+  return <BookOpen size={10} />
 }
 
 const getEventClass = (title: string, periods: string): string => {
@@ -155,7 +155,6 @@ export default function CalendarView({ data, filter }) {
             : isSunday || isHolidayDate
               ? "#fef2f2"
               : undefined,
-        minHeight: 120,
       },
     }
   }
@@ -188,10 +187,10 @@ export default function CalendarView({ data, filter }) {
     return (
       <div
         className={cn(
-          "flex items-center justify-center h-full font-medium",
+          "flex items-center justify-center h-full font-medium text-sm",
           isSaturday && "text-blue-600",
           (isSunday || isHolidayDate) && "text-red-600",
-          isToday && "bg-yellow-200 rounded-full w-8 h-8 mx-auto",
+          isToday && "bg-yellow-200 rounded-full w-6 h-6 mx-auto text-xs",
         )}
       >
         {label}
@@ -199,10 +198,10 @@ export default function CalendarView({ data, filter }) {
     )
   }
 
-  // カレンダーの高さを画面サイズに合わせて調整
+  // カレンダーの高さを画面サイズに合わせて最大化
   return (
     <div
-      className={`h-[calc(100vh-200px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-3 ${mplusRounded.variable}`}
+      className={`h-[calc(100vh-120px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded-lg p-2 ${mplusRounded.variable}`}
     >
       <Calendar
         localizer={localizer}

@@ -109,9 +109,9 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
     )
   }
 
-  // リストビューの高さとフォントサイズを調整
+  // リストビューの高さを最大化
   return (
-    <div ref={tableRef} className="overflow-auto bg-white rounded-lg shadow-lg max-h-[calc(100vh-200px)]">
+    <div ref={tableRef} className="overflow-auto bg-white rounded-lg shadow-lg max-h-[calc(100vh-120px)]">
       <table className="min-w-full">
         <thead className="sticky top-0 z-10">
           <tr className="bg-gray-100 text-gray-600 uppercase text-xs leading-normal">

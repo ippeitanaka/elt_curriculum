@@ -52,8 +52,8 @@ export default async function Page({ searchParams }) {
 
       if (!curriculumData || curriculumData.length === 0) {
         return (
-          <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-4">
+          <div className="container mx-auto px-2 py-4">
+            <h1 className="text-2xl font-bold mb-2">
               {year}年{classParam}クラス カリキュラム
             </h1>
             <Suspense fallback={<Loading />}>
@@ -69,13 +69,13 @@ export default async function Page({ searchParams }) {
       console.log(`データ範囲: ${firstDate} から ${lastDate}`)
 
       return (
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-4">
+        <div className="container mx-auto px-2 py-4">
+          <h1 className="text-2xl font-bold mb-2">
             {year}年{classParam}クラス カリキュラム
           </h1>
           {/* デバッグ情報の表示（開発時のみ） */}
           {process.env.NODE_ENV === "development" && (
-            <div className="text-sm text-gray-500 mb-4">
+            <div className="text-sm text-gray-500 mb-2">
               <p>取得データ数: {curriculumData.length}行</p>
               <p>
                 データ範囲: {firstDate} 〜 {lastDate}
@@ -91,8 +91,8 @@ export default async function Page({ searchParams }) {
       console.error("Error:", error)
       // エラー時はモックデータで表示
       return (
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-4">
+        <div className="container mx-auto px-2 py-4">
+          <h1 className="text-2xl font-bold mb-2">
             {year}年{classParam}クラス カリキュラム
           </h1>
           <Suspense fallback={<Loading />}>
@@ -105,8 +105,8 @@ export default async function Page({ searchParams }) {
 
   // プレビュー環境では直接コンポーネントを表示
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">
+    <div className="container mx-auto px-2 py-4">
+      <h1 className="text-2xl font-bold mb-2">
         {year}年{classParam}クラス カリキュラム
       </h1>
       <Suspense fallback={<Loading />}>
