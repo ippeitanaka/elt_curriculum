@@ -84,61 +84,20 @@
   height: 100%;
 }
 
-/* 日付セルのスタイリング - 左上に小さく表示 */
 .rbc-date-cell {
   position: relative;
   border-right: 1px solid #e5e7eb;
   min-height: 20px;
-  padding: 0 !important;
+  padding: 0;
 }
 
 .rbc-date-cell:last-child {
   border-right: none;
 }
 
-/* 日付の数字を左上に小さく表示 */
-.rbc-date-cell > a,
-.rbc-date-cell > span {
-  position: absolute !important;
-  top: 2px !important;
-  left: 4px !important;
-  font-size: 0.6rem !important;
-  font-weight: 600 !important;
-  line-height: 1 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  text-decoration: none !important;
-  color: inherit !important;
-  background: none !important;
-  border: none !important;
-  width: auto !important;
-  height: auto !important;
-  display: block !important;
-  z-index: 1;
-}
-
-/* 今日の日付のスタイリング */
-.rbc-today .rbc-date-cell > a,
-.rbc-today .rbc-date-cell > span {
-  background: #f59e0b !important;
-  color: white !important;
-  border-radius: 3px !important;
-  padding: 1px 3px !important;
-  font-weight: 700 !important;
-}
-
-/* 土曜日の日付 */
-.rbc-date-cell.saturday > a,
-.rbc-date-cell.saturday > span {
-  color: #2563eb !important;
-}
-
-/* 日曜日・祝日の日付 */
-.rbc-date-cell.sunday > a,
-.rbc-date-cell.sunday > span,
-.rbc-date-cell.holiday > a,
-.rbc-date-cell.holiday > span {
-  color: #dc2626 !important;
+/* 既存の日付表示を非表示にする */
+.rbc-date-cell > a {
+  display: none;
 }
 
 .rbc-day-bg {
@@ -186,7 +145,6 @@
   gap: 2px;
   line-height: 1.1;
   min-height: 16px;
-  margin-top: 18px; /* 日付の下にイベントを表示するためのマージン */
 }
 
 /* react-big-calendarのデフォルトイベントスタイルを完全に上書き */
@@ -298,7 +256,6 @@
     margin: 0.25px;
     min-height: 14px;
     gap: 0; /* モバイルではアイコンとテキストの間隔をなくす */
-    margin-top: 16px; /* モバイルでは日付の下のマージンを小さく */
   }
 
   /* モバイルではアイコンを非表示 */
@@ -306,16 +263,14 @@
     display: none;
   }
 
-  .rbc-date-cell > a,
-  .rbc-date-cell > span {
-    font-size: 0.55rem !important;
-    top: 1px !important;
-    left: 2px !important;
+  .rbc-date-cell {
+    min-height: 18px;
+    padding: 0;
+    position: relative;
   }
 
-  .rbc-today .rbc-date-cell > a,
-  .rbc-today .rbc-date-cell > span {
-    padding: 0.5px 2px !important;
+  .rbc-date-cell > a {
+    display: none;
   }
 }
 
