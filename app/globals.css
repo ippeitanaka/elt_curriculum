@@ -143,14 +143,50 @@
   min-height: 16px;
 }
 
-/* react-big-calendarのデフォルトイベントスタイルを上書き */
+/* react-big-calendarのデフォルトイベントスタイルを完全に上書き */
 .rbc-event {
   border: none !important;
   outline: none !important;
+  box-shadow: none !important;
 }
 
 .rbc-event-content {
   border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.rbc-selected {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.rbc-event-continues-after {
+  border: none !important;
+}
+
+.rbc-event-continues-before {
+  border: none !important;
+}
+
+.rbc-event-continues-after::after {
+  border: none !important;
+}
+
+.rbc-event-continues-before::before {
+  border: none !important;
+}
+
+/* すべてのイベント関連要素から枠線を削除 */
+.rbc-event,
+.rbc-event-content,
+.rbc-selected,
+.rbc-event-continues-after,
+.rbc-event-continues-before {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .calendar-event:hover {
