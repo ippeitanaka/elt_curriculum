@@ -171,7 +171,8 @@ export default function CalendarView({ data, filter }) {
           setSelectedEvent(event)
         }}
       >
-        {icon}
+        {/* アイコンにクラスを追加してレスポンシブ制御 */}
+        <span className="calendar-event-icon">{icon}</span>
         <span className="truncate flex-1">{event.title}</span>
       </div>
     )

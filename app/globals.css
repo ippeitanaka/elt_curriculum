@@ -125,7 +125,7 @@
   border-bottom: none;
 }
 
-/* イベントのスタイリング - 更にコンパクト */
+/* イベントのスタイリング - アイコンのレスポンシブ対応 */
 .calendar-event {
   border-radius: 3px;
   margin: 0.5px;
@@ -146,6 +146,11 @@
 .calendar-event:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+}
+
+/* アイコンのレスポンシブ表示制御 */
+.calendar-event-icon {
+  flex-shrink: 0;
 }
 
 /* 授業タイプ別の色分け */
@@ -225,7 +230,7 @@
   background-color: #fef2f2;
 }
 
-/* モバイル対応 - 更に積極的な高さ調整 */
+/* モバイル対応 - アイコンを非表示にして講義名を最大表示 */
 @media (max-width: 768px) {
   .rbc-calendar {
     font-size: 0.65rem;
@@ -251,6 +256,12 @@
     padding: 0.5px 2px;
     margin: 0.25px;
     min-height: 14px;
+    gap: 0; /* モバイルではアイコンとテキストの間隔をなくす */
+  }
+
+  /* モバイルではアイコンを非表示 */
+  .calendar-event-icon {
+    display: none;
   }
 
   .rbc-date-cell {
@@ -260,7 +271,7 @@
   }
 }
 
-/* タブレット対応 */
+/* タブレット対応 - アイコンは表示するが小さく */
 @media (min-width: 769px) and (max-width: 1024px) {
   .rbc-day-bg {
     min-height: calc((100vh - 130px) / 6);
@@ -269,6 +280,21 @@
   .rbc-month-row {
     height: calc((100vh - 130px) / 6);
     min-height: calc((100vh - 130px) / 6);
+  }
+
+  .calendar-event {
+    gap: 1px; /* タブレットではアイコンとテキストの間隔を狭く */
+  }
+
+  .calendar-event-icon {
+    display: block; /* タブレットではアイコンを表示 */
+  }
+}
+
+/* デスクトップ対応 - アイコンを通常表示 */
+@media (min-width: 1025px) {
+  .calendar-event-icon {
+    display: block;
   }
 }
 
