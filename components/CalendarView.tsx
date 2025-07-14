@@ -199,46 +199,16 @@ export default function CalendarView({ data, filter }) {
     )
   }
 
-  const CustomDateComponent = ({ date, label }) => {
-    const dayOfWeek = date.getDay()
-    const isSaturday = dayOfWeek === 6
-    const isSunday = dayOfWeek === 0
-    const isHolidayDate = isHoliday(date)
-    const isToday = moment(date).isSame(moment(), "day")
-
-    return (
-      <div
-        className={cn(
-          "text-left text-xs font-medium p-1",
-          isSaturday && "text-blue-600",
-          (isSunday || isHolidayDate) && "text-red-600",
-          isToday && "bg-yellow-200 rounded w-5 h-5 flex items-center justify-center text-xs font-bold",
-        )}
-        style={{
-          position: "absolute",
-          top: "2px",
-          left: "4px",
-          fontSize: "0.65rem",
-          lineHeight: "1",
-        }}
-      >
-        {moment(date).format("D")}
-      </div>
-    )
-  }
-
-  // カレンダーの高さを画面サイズに合わせて最大化 - 更に大きく
+  // カレンダーの高さを自動調整 - スクロール可能に
   return (
-    <div
-      className={`h-[calc(100vh-90px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}
-    >
+    <div className={`min-h-[1200px] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}>
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{
-          height: "100%",
+          height: "1200px", // 固定の高さを設定
           fontSize: "0.75rem",
         }}
         messages={messages}
@@ -259,7 +229,6 @@ export default function CalendarView({ data, filter }) {
           event: EventComponent,
           month: {
             dateHeader: customDateHeader,
-            date: CustomDateComponent,
           },
         }}
         popup={false}
