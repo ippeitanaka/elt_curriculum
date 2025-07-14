@@ -173,9 +173,9 @@
 }
 
 .event-practice {
-  background: linear-gradient(135deg, #fce7f3, #fbcfe8);
-  color: #be185d;
-  border-left: 2px solid #ec4899;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border-left: 2px solid #f59e0b;
 }
 
 .event-lecture {

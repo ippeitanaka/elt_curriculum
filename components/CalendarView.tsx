@@ -75,7 +75,8 @@ const getEventClass = (title: string, periods: string): string => {
   if (periods === "試験") return "event-exam"
   if (periods?.includes("模試")) return "event-mock-exam"
   if (title === "マイスタディ" || title === "自宅学習") return "event-my-study"
-  if (periods?.startsWith("実習")) return "event-practice"
+  // 実習の判定を拡張：コマ数が「実習」で始まる、または講義名に「実習」が含まれる
+  if (periods?.startsWith("実習") || title?.includes("実習")) return "event-practice"
   if (title?.includes("演習")) return "event-exercise"
   if (title?.includes("講義")) return "event-lecture"
   if (title?.includes("解剖")) return "event-anatomy"
