@@ -326,25 +326,26 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
     return content || periods
   })
 
+  // コンテナの高さとパディングを調整
   return (
     <div className={`max-w-7xl mx-auto ${mplusRounded.variable}`}>
       {/* プレビュー環境での注意書き */}
       {typeof window !== "undefined" && window.location.hostname.includes("v0.dev") && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
           <p className="text-blue-800 text-sm">
             <strong>プレビュー環境:</strong> 実際のデータベースに接続できないため、サンプルデータを表示しています。
           </p>
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
             <FilterComponent filter={filter} setFilter={setFilter} />
             {view === "list" && (
               <button
                 onClick={() => setShowExamsOnly(!showExamsOnly)}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   showExamsOnly ? "bg-blue-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >

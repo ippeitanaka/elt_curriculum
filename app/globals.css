@@ -59,31 +59,35 @@
   }
 }
 
-/* カレンダーの改善されたスタイル */
+/* カレンダーの改善されたスタイル - コンパクト版 */
 .rbc-calendar {
   font-family: var(--font-mplus-rounded), sans-serif;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   overflow: hidden;
+  height: 100%;
 }
 
 .rbc-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
-  padding: 12px 8px;
+  padding: 8px 4px;
   border: none;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
 }
 
 .rbc-month-view {
   border: none;
+  height: 100%;
 }
 
 .rbc-date-cell {
-  padding: 8px;
+  padding: 4px;
   border-right: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .rbc-date-cell:last-child {
@@ -93,7 +97,7 @@
 .rbc-day-bg {
   border-right: 1px solid #e5e7eb;
   border-bottom: 1px solid #e5e7eb;
-  min-height: 120px;
+  min-height: 90px;
 }
 
 .rbc-day-bg:last-child {
@@ -111,98 +115,101 @@
 
 .rbc-month-row {
   border-bottom: 1px solid #e5e7eb;
+  height: calc((100vh - 280px) / 6);
+  min-height: 90px;
 }
 
 .rbc-month-row:last-child {
   border-bottom: none;
 }
 
-/* イベントのスタイリング */
+/* イベントのスタイリング - コンパクト版 */
 .calendar-event {
-  border-radius: 6px;
-  margin: 1px 2px;
-  padding: 2px 6px;
-  font-size: 0.75rem;
+  border-radius: 4px;
+  margin: 1px;
+  padding: 1px 4px;
+  font-size: 0.7rem;
   font-weight: 500;
   border: none;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1);
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  line-height: 1.2;
 }
 
 .calendar-event:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
 }
 
 /* 授業タイプ別の色分け */
 .event-exam {
   background: linear-gradient(135deg, #fee2e2, #fecaca);
   color: #991b1b;
-  border-left: 3px solid #dc2626;
+  border-left: 2px solid #dc2626;
 }
 
 .event-mock-exam {
   background: linear-gradient(135deg, #fed7aa, #fdba74);
   color: #9a3412;
-  border-left: 3px solid #ea580c;
+  border-left: 2px solid #ea580c;
 }
 
 .event-my-study {
   background: linear-gradient(135deg, #dbeafe, #bfdbfe);
   color: #1e40af;
-  border-left: 3px solid #3b82f6;
+  border-left: 2px solid #3b82f6;
 }
 
 .event-practice {
   background: linear-gradient(135deg, #fce7f3, #fbcfe8);
   color: #be185d;
-  border-left: 3px solid #ec4899;
+  border-left: 2px solid #ec4899;
 }
 
 .event-lecture {
   background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
   color: #3730a3;
-  border-left: 3px solid #6366f1;
+  border-left: 2px solid #6366f1;
 }
 
 .event-exercise {
   background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
   color: #6b21a8;
-  border-left: 3px solid #9333ea;
+  border-left: 2px solid #9333ea;
 }
 
 .event-anatomy {
   background: linear-gradient(135deg, #dcfce7, #bbf7d0);
   color: #166534;
-  border-left: 3px solid #22c55e;
+  border-left: 2px solid #22c55e;
 }
 
 .event-physiology {
   background: linear-gradient(135deg, #fef3c7, #fde68a);
   color: #92400e;
-  border-left: 3px solid #f59e0b;
+  border-left: 2px solid #f59e0b;
 }
 
 .event-emergency {
   background: linear-gradient(135deg, #fed7d7, #fbb6ce);
   color: #be123c;
-  border-left: 3px solid #f43f5e;
+  border-left: 2px solid #f43f5e;
 }
 
 .event-trauma {
   background: linear-gradient(135deg, #e0f2fe, #bae6fd);
   color: #0c4a6e;
-  border-left: 3px solid #0284c7;
+  border-left: 2px solid #0284c7;
 }
 
 .event-default {
   background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
   color: #475569;
-  border-left: 3px solid #64748b;
+  border-left: 2px solid #64748b;
 }
 
 /* 土日祝日のスタイリング */
@@ -218,22 +225,32 @@
 /* モバイル対応 */
 @media (max-width: 768px) {
   .rbc-calendar {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 
   .rbc-header {
-    padding: 8px 4px;
-    font-size: 0.75rem;
+    padding: 6px 2px;
+    font-size: 0.7rem;
   }
 
   .rbc-day-bg {
-    min-height: 80px;
+    min-height: 70px;
+  }
+
+  .rbc-month-row {
+    height: calc((100vh - 240px) / 6);
+    min-height: 70px;
   }
 
   .calendar-event {
-    font-size: 0.625rem;
-    padding: 1px 4px;
-    margin: 0.5px 1px;
+    font-size: 0.6rem;
+    padding: 1px 2px;
+    margin: 0.5px;
+  }
+
+  .rbc-date-cell {
+    padding: 2px;
+    font-size: 0.8rem;
   }
 }
 

@@ -199,9 +199,10 @@ export default function CalendarView({ data, filter }) {
     )
   }
 
+  // カレンダーの高さを画面サイズに合わせて調整
   return (
     <div
-      className={`h-[calc(100vh-8rem)] bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-4 ${mplusRounded.variable}`}
+      className={`h-[calc(100vh-200px)] bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-3 ${mplusRounded.variable}`}
     >
       <Calendar
         localizer={localizer}
@@ -210,7 +211,7 @@ export default function CalendarView({ data, filter }) {
         endAccessor="end"
         style={{
           height: "100%",
-          fontSize: "0.875rem",
+          fontSize: "0.8rem",
         }}
         messages={messages}
         view={Views.MONTH}
@@ -220,9 +221,9 @@ export default function CalendarView({ data, filter }) {
           dayFormat: (date, culture, localizer) => {
             const day = localizer.format(date, "ddd", culture)
             const dayNum = localizer.format(date, "D", culture)
-            if (day === "土") return <span className="text-blue-600 font-medium">{dayNum}</span>
-            if (day === "日") return <span className="text-red-600 font-medium">{dayNum}</span>
-            return <span className="font-medium">{dayNum}</span>
+            if (day === "土") return <span className="text-blue-600 font-medium text-sm">{dayNum}</span>
+            if (day === "日") return <span className="text-red-600 font-medium text-sm">{dayNum}</span>
+            return <span className="font-medium text-sm">{dayNum}</span>
           },
         }}
         dayPropGetter={customDayPropGetter}
@@ -239,14 +240,14 @@ export default function CalendarView({ data, filter }) {
       <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
         <DialogContent className="dialog-content max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+            <DialogTitle className="text-lg font-bold flex items-center gap-2">
               {selectedEvent && getEventIcon(selectedEvent.title, selectedEvent.periods)}
               {selectedEvent?.title}
             </DialogTitle>
             <DialogDescription>
-              <div className="space-y-3 mt-4">
+              <div className="space-y-2 mt-3">
                 <div className="flex items-center gap-2 text-sm">
-                  <Clock size={16} className="text-gray-500" />
+                  <Clock size={14} className="text-gray-500" />
                   <span className="font-medium">時限:</span>
                   <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
                     {selectedEvent?.timeSlot}
@@ -255,7 +256,7 @@ export default function CalendarView({ data, filter }) {
 
                 {selectedEvent?.teacher && (
                   <div className="flex items-center gap-2 text-sm">
-                    <User size={16} className="text-gray-500" />
+                    <User size={14} className="text-gray-500" />
                     <span className="font-medium">担当講師:</span>
                     <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
                       {selectedEvent.teacher}
@@ -265,7 +266,7 @@ export default function CalendarView({ data, filter }) {
 
                 {selectedEvent?.periods && (
                   <div className="flex items-center gap-2 text-sm">
-                    <CalendarIcon size={16} className="text-gray-500" />
+                    <CalendarIcon size={14} className="text-gray-500" />
                     <span className="font-medium">コマ数:</span>
                     <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">
                       {selectedEvent.periods}

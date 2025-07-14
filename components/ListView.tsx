@@ -109,24 +109,25 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
     )
   }
 
+  // リストビューの高さとフォントサイズを調整
   return (
-    <div ref={tableRef} className="overflow-auto bg-white rounded-lg shadow-lg max-h-[calc(100vh-12rem)]">
+    <div ref={tableRef} className="overflow-auto bg-white rounded-lg shadow-lg max-h-[calc(100vh-200px)]">
       <table className="min-w-full">
         <thead className="sticky top-0 z-10">
-          <tr className="bg-gray-100 text-gray-600 uppercase text-[0.5rem] sm:text-[0.65rem] leading-normal">
-            <th className="py-1 sm:py-2 px-1 sm:px-3 text-left w-14 sm:w-20">日付</th>
-            <th className="py-1 sm:py-2 px-1 sm:px-2 text-left w-6 sm:w-8">曜日</th>
-            <th className="py-1 sm:py-2 px-1 sm:px-2 text-left w-6 sm:w-8">時限</th>
-            <th className="py-1 sm:py-2 px-1 sm:px-3 text-left w-32 sm:w-48">授業内容</th>
-            <th className="py-1 sm:py-2 px-1 sm:px-3 text-left w-14 sm:w-20">担当講師</th>
-            <th className="py-1 sm:py-2 px-1 sm:px-2 text-left w-14 sm:w-16">コマ数</th>
-            <th className="py-1 sm:py-2 px-1 sm:px-2 text-left w-20 sm:w-28">学年・クラス</th>
+          <tr className="bg-gray-100 text-gray-600 uppercase text-xs leading-normal">
+            <th className="py-2 px-3 text-left w-20">日付</th>
+            <th className="py-2 px-2 text-left w-8">曜日</th>
+            <th className="py-2 px-2 text-left w-8">時限</th>
+            <th className="py-2 px-3 text-left w-48">授業内容</th>
+            <th className="py-2 px-3 text-left w-20">担当講師</th>
+            <th className="py-2 px-2 text-left w-16">コマ数</th>
+            <th className="py-2 px-2 text-left w-28">学年・クラス</th>
           </tr>
         </thead>
-        <tbody className="text-gray-600 text-[0.6rem] sm:text-xs">
+        <tbody className="text-gray-600 text-sm">
           {sortedData.map((item, index) => {
-            // 日付プロパティが存在するか確認
-            if (!item || !item.日付) return null // 無効なデータをスキップ
+            // 既存のロジックはそのまま...
+            if (!item || !item.日付) return null
 
             const date = new Date(item.日付)
             const formattedDate = format(date, "M月d日", { locale: ja })
@@ -147,7 +148,6 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
             const isMockExam = periods.includes("模試")
             const isMyStudy = content === "マイスタディ" || content === "自宅学習"
 
-            // 今日の日付かどうかをチェック
             const isToday = item.日付 === today
 
             let bgColorClass = "bg-white bg-opacity-70"
@@ -158,36 +158,36 @@ export default function ListView({ data, filter, selectedInstructor, showExamsOn
             return (
               <tr
                 key={`${index}-${year}-${cls}`}
-                ref={isToday ? todayRef : null} // 今日の日付の行にrefを設定
+                ref={isToday ? todayRef : null}
                 className={`
-                  ${isExam ? "bg-red-100 hover:bg-red-200" : ""}
-                  ${isMockExam && !isExam ? "bg-orange-100 hover:bg-orange-200" : ""}
-                  ${isMyStudy && !isExam && !isMockExam ? "bg-sky-100 hover:bg-sky-200" : ""} // マイスタディの背景色
-                  ${!isExam && !isMockExam && !isMyStudy ? "hover:bg-gray-50" : ""}
-                  ${isNewDate ? "border-t border-gray-300" : ""}
-                  ${isToday ? "bg-yellow-50 hover:bg-yellow-100" : ""} // 今日の日付をハイライト
-                `}
+                ${isExam ? "bg-red-100 hover:bg-red-200" : ""}
+                ${isMockExam && !isExam ? "bg-orange-100 hover:bg-orange-200" : ""}
+                ${isMyStudy && !isExam && !isMockExam ? "bg-sky-100 hover:bg-sky-200" : ""}
+                ${!isExam && !isMockExam && !isMyStudy ? "hover:bg-gray-50" : ""}
+                ${isNewDate ? "border-t border-gray-300" : ""}
+                ${isToday ? "bg-yellow-50 hover:bg-yellow-100" : ""}
+              `}
               >
-                <td className="py-1 px-1 sm:px-3 text-left whitespace-nowrap">
+                <td className="py-2 px-3 text-left whitespace-nowrap">
                   {formattedDate}
                   {isToday && (
                     <span className="ml-1 inline-block align-middle">
                       <Image
                         src="/images/qyan-transparent.png"
                         alt="今日"
-                        width={20}
-                        height={20}
+                        width={16}
+                        height={16}
                         className="inline-block animate-bounce"
                       />
                     </span>
                   )}
                 </td>
-                <td className="py-1 px-1 sm:px-2 text-left">{shortenDayOfWeek(item.曜日 || "")}</td>
-                <td className="py-1 px-1 sm:px-2 text-left">{item.時限}</td>
-                <td className="py-1 px-1 sm:px-3 text-left">{content}</td>
-                <td className="py-1 px-1 sm:px-3 text-left">{item[`${year}年${cls}クラス担当講師名`]}</td>
-                <td className="py-1 px-1 sm:px-2 text-left">{periods}</td>
-                <td className="py-1 px-1 sm:px-2 text-left">{`${year}年${cls}クラス`}</td>
+                <td className="py-2 px-2 text-left">{shortenDayOfWeek(item.曜日 || "")}</td>
+                <td className="py-2 px-2 text-left">{item.時限}</td>
+                <td className="py-2 px-3 text-left">{content}</td>
+                <td className="py-2 px-3 text-left">{item[`${year}年${cls}クラス担当講師名`]}</td>
+                <td className="py-2 px-2 text-left">{periods}</td>
+                <td className="py-2 px-2 text-left">{`${year}年${cls}クラス`}</td>
               </tr>
             )
           })}
