@@ -199,6 +199,34 @@ export default function CalendarView({ data, filter }) {
     )
   }
 
+  const CustomDateComponent = ({ date, label }) => {
+    const dayOfWeek = date.getDay()
+    const isSaturday = dayOfWeek === 6
+    const isSunday = dayOfWeek === 0
+    const isHolidayDate = isHoliday(date)
+    const isToday = moment(date).isSame(moment(), "day")
+
+    return (
+      <div
+        className={cn(
+          "text-left text-xs font-medium p-1",
+          isSaturday && "text-blue-600",
+          (isSunday || isHolidayDate) && "text-red-600",
+          isToday && "bg-yellow-200 rounded w-5 h-5 flex items-center justify-center text-xs font-bold",
+        )}
+        style={{
+          position: "absolute",
+          top: "2px",
+          left: "4px",
+          fontSize: "0.65rem",
+          lineHeight: "1",
+        }}
+      >
+        {moment(date).format("D")}
+      </div>
+    )
+  }
+
   // カレンダーの高さを画面サイズに合わせて最大化 - 更に大きく
   return (
     <div
@@ -231,6 +259,7 @@ export default function CalendarView({ data, filter }) {
           event: EventComponent,
           month: {
             dateHeader: customDateHeader,
+            date: CustomDateComponent,
           },
         }}
         popup={false}
