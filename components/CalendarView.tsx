@@ -218,7 +218,7 @@ export default function CalendarView({ data, filter }) {
         style={{
           position: "absolute",
           top: "50%",
-          left: "50%",
+          left: "52%",
           transform: "translate(-50%, -50%)",
           fontSize: "0.65rem",
           lineHeight: "1",
