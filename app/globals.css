@@ -121,8 +121,8 @@
 
 .rbc-month-row {
   border-bottom: 1px solid #e5e7eb;
-  height: calc((100vh - 150px) / 6);
-  min-height: calc((100vh - 150px) / 6);
+  height: 200px;
+  min-height: 200px;
 }
 
 .rbc-month-row:last-child {
@@ -242,12 +242,12 @@
   }
 
   .rbc-day-bg {
-    min-height: calc((100vh - 120px) / 6);
+    min-height: 180px;
   }
 
   .rbc-month-row {
-    height: calc((100vh - 120px) / 6);
-    min-height: calc((100vh - 120px) / 6);
+    height: 180px;
+    min-height: 180px;
   }
 
   .calendar-event {
@@ -277,12 +277,12 @@
 /* タブレット対応 - アイコンは表示するが小さく */
 @media (min-width: 769px) and (max-width: 1024px) {
   .rbc-day-bg {
-    min-height: calc((100vh - 130px) / 6);
+    min-height: 160px;
   }
 
   .rbc-month-row {
-    height: calc((100vh - 130px) / 6);
-    min-height: calc((100vh - 130px) / 6);
+    height: 160px;
+    min-height: 160px;
   }
 
   .calendar-event {
