@@ -209,15 +209,17 @@ export default function CalendarView({ data, filter }) {
     return (
       <div
         className={cn(
-          "text-left text-xs font-medium p-1",
+          "flex items-center justify-center text-xs font-medium",
           isSaturday && "text-blue-600",
           (isSunday || isHolidayDate) && "text-red-600",
-          isToday && "bg-yellow-300 rounded-md w-6 h-5 flex items-center justify-center text-xs font-bold text-yellow-900 border border-yellow-500",
+          isToday && "bg-yellow-300 rounded-md w-6 h-5 font-bold text-yellow-900 border border-yellow-500",
+          !isToday && "w-5 h-5"
         )}
         style={{
           position: "absolute",
-          top: "2px",
-          left: "4px",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           fontSize: "0.65rem",
           lineHeight: "1",
         }}
