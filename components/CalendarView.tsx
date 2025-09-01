@@ -191,7 +191,7 @@ export default function CalendarView({ data, filter }) {
           "flex items-center justify-center h-full font-medium text-sm",
           isSaturday && "text-blue-600",
           (isSunday || isHolidayDate) && "text-red-600",
-          isToday && "bg-yellow-200 rounded-full w-6 h-6 mx-auto text-xs",
+          isToday && "bg-yellow-300 rounded-md px-2 py-1 font-bold text-yellow-900 border border-yellow-500",
         )}
       >
         {label}
@@ -212,7 +212,7 @@ export default function CalendarView({ data, filter }) {
           "text-left text-xs font-medium p-1",
           isSaturday && "text-blue-600",
           (isSunday || isHolidayDate) && "text-red-600",
-          isToday && "bg-yellow-200 rounded w-5 h-5 flex items-center justify-center text-xs font-bold",
+          isToday && "bg-yellow-300 rounded-md w-6 h-5 flex items-center justify-center text-xs font-bold text-yellow-900 border border-yellow-500",
         )}
         style={{
           position: "absolute",
@@ -230,7 +230,7 @@ export default function CalendarView({ data, filter }) {
   // カレンダーの高さを自動調整で縦長表示を許可
   return (
     <div
-      className={`min-h-[800px] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}
+      className={`min-h-[600px] bg-gradient-to-br from-slate-50 to-blue-50 rounded p-1 ${mplusRounded.variable}`}
     >
       <Calendar
         localizer={localizer}
@@ -238,7 +238,7 @@ export default function CalendarView({ data, filter }) {
         startAccessor="start"
         endAccessor="end"
         style={{
-          height: "1200px",
+          height: "800px",
           fontSize: "0.75rem",
         }}
         messages={messages}

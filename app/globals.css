@@ -112,7 +112,10 @@
 
 .rbc-today {
   background-color: #fef3c7 !important;
-  border: 2px solid #f59e0b;
+  border: 2px solid #f59e0b !important;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px #f59e0b inset;
+  position: relative;
 }
 
 .rbc-off-range-bg {
@@ -121,8 +124,8 @@
 
 .rbc-month-row {
   border-bottom: 1px solid #e5e7eb;
-  height: 200px;
-  min-height: 200px;
+  height: 120px;
+  min-height: 120px;
 }
 
 .rbc-month-row:last-child {
@@ -242,12 +245,12 @@
   }
 
   .rbc-day-bg {
-    min-height: 180px;
+    min-height: 100px;
   }
 
   .rbc-month-row {
-    height: 180px;
-    min-height: 180px;
+    height: 100px;
+    min-height: 100px;
   }
 
   .calendar-event {
@@ -277,12 +280,12 @@
 /* タブレット対応 - アイコンは表示するが小さく */
 @media (min-width: 769px) and (max-width: 1024px) {
   .rbc-day-bg {
-    min-height: 160px;
+    min-height: 90px;
   }
 
   .rbc-month-row {
-    height: 160px;
-    min-height: 160px;
+    height: 90px;
+    min-height: 90px;
   }
 
   .calendar-event {
