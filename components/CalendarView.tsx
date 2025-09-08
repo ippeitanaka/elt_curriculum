@@ -129,7 +129,6 @@ export default function CalendarView({ data, filter }) {
     const isSaturday = dayOfWeek === 6
     const isSunday = dayOfWeek === 0
     const isHolidayDate = isHoliday(date)
-    const isToday = moment(date).isSame(moment(), "day")
 
     let className = ""
     if (isSaturday) className += " saturday"
@@ -140,16 +139,13 @@ export default function CalendarView({ data, filter }) {
         className,
         isSaturday && "text-blue-600",
         (isSunday || isHolidayDate) && "text-red-600",
-        isToday && "font-bold",
       ),
       style: {
-        backgroundColor: isToday
-          ? "#fef3c7"
-          : isSaturday
-            ? "#eff6ff"
-            : isSunday || isHolidayDate
-              ? "#fef2f2"
-              : undefined,
+        backgroundColor: isSaturday
+          ? "#eff6ff"
+          : isSunday || isHolidayDate
+            ? "#fef2f2"
+            : undefined,
       },
     }
   }
@@ -183,7 +179,6 @@ export default function CalendarView({ data, filter }) {
     const isSaturday = dayOfWeek === 6
     const isSunday = dayOfWeek === 0
     const isHolidayDate = isHoliday(date)
-    const isToday = moment(date).isSame(moment(), "day")
 
     return (
       <div
@@ -191,7 +186,6 @@ export default function CalendarView({ data, filter }) {
           "flex items-center justify-center h-full font-medium text-sm",
           isSaturday && "text-blue-600",
           (isSunday || isHolidayDate) && "text-red-600",
-          isToday && "bg-yellow-300 rounded-md px-2 py-1 font-bold text-yellow-900 border border-yellow-500",
         )}
       >
         {label}
@@ -204,7 +198,6 @@ export default function CalendarView({ data, filter }) {
     const isSaturday = dayOfWeek === 6
     const isSunday = dayOfWeek === 0
     const isHolidayDate = isHoliday(date)
-    const isToday = moment(date).isSame(moment(), "day")
 
     return (
       <div
@@ -212,8 +205,7 @@ export default function CalendarView({ data, filter }) {
           "flex items-center justify-center text-xs font-medium",
           isSaturday && "text-blue-600",
           (isSunday || isHolidayDate) && "text-red-600",
-          isToday && "bg-yellow-300 rounded-md w-6 h-5 font-bold text-yellow-900 border border-yellow-500",
-          !isToday && "w-5 h-5"
+          "w-5 h-5"
         )}
         style={{
           position: "absolute",
