@@ -1,4 +1,5 @@
 import type React from "react"
+import Script from "next/script"
 import { M_PLUS_Rounded_1c } from "next/font/google"
 import Image from "next/image"
 import Link from "next/link"
@@ -16,6 +17,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja" className={mplusRounded.variable}>
       <body className={`min-h-screen bg-white font-sans ${mplusRounded.className}`}>
+        {/* GA4: 全ページに読み込み */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-3K0XSVMYL7"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-3K0XSVMYL7');
+          `}
+        </Script>
         <div className="flex min-h-screen flex-col">
           <header className="sticky top-0 z-50 bg-black text-white h-12 sm:h-16 flex items-start">
             <div className="container mx-auto flex h-full items-center px-4 pt-2">
