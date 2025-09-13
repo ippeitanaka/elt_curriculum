@@ -7,7 +7,8 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "inject:ga4": "node scripts/inject-ga4.js"
+    "inject:ga4": "node scripts/inject-ga4.js",
+    "inject:gsc": "node scripts/inject-site-verification.js"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
