@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`min-h-screen bg-white font-sans ${mplusRounded.className}`}>
         {/* GA4: 全ページに読み込み */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-3K0XSVMYL7"
+          src="https://www.googletagmanager.com/gtag/js?id=G-JPXBRWRFWR"
           strategy="afterInteractive"
         />
         <Script id="ga4-init" strategy="afterInteractive">
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-3K0XSVMYL7');
+            gtag('config', 'G-JPXBRWRFWR');
           `}
         </Script>
         <div className="flex min-h-screen flex-col">

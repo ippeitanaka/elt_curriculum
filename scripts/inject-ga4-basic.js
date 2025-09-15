@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = process.cwd();
-const GA_ID = 'G-3K0XSVMYL7';
+const GA_ID = 'G-JPXBRWRFWR';
 const GA_JS_URL = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
 
 const EXCLUDE_DIRS = new Set([
@@ -45,7 +45,7 @@ function detectEOL(text) {
 
 function hasGA4(content) {
   const hasJs = content.includes(GA_JS_URL);
-  const reConfig = /gtag\(\s*['"]config['"]\s*,\s*['"]G-3K0XSVMYL7['"]\s*\)/i;
+  const reConfig = /gtag\(\s*['"]config['"]\s*,\s*['"]G-JPXBRWRFWR['"]\s*\)/i;
   return hasJs || reConfig.test(content);
 }
 
