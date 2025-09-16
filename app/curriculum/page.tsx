@@ -39,6 +39,15 @@ async function fetchAllData(supabase) {
   return allData
 }
 
+export async function generateMetadata({ searchParams }) {
+  const year = searchParams.year || "1"
+  const classParam = searchParams.class || "A"
+  
+  return {
+    title: `${year}年${classParam}クラス`,
+  }
+}
+
 export default async function Page({ searchParams }) {
   const year = searchParams.year || "1"
   const classParam = searchParams.class || "A"
