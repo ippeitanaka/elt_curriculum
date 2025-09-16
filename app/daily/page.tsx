@@ -3,6 +3,9 @@ import DailyViewer from "../../components/DailyViewer"
 import Loading from "../curriculum/loading"
 
 export const dynamic = "force-dynamic"
+export const metadata = {
+  title: "全学年表示",
+}
 
 export default function DailyPage() {
   return (

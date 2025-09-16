@@ -1,4 +1,7 @@
 import Link from "next/link"
+export const metadata = {
+  title: "ELT カリキュラム",
+}
 
 export default function Home() {
   const classes = ["A", "B", "N"]

@@ -58,7 +58,7 @@ export default function TeacherSchedule() {
         }
 
         // レスポンスのステータスコードをデバッグ情報に追加
-        setDebugInfo((prev) => ({ ...prev, status: response.status }))
+  setDebugInfo((prev: any) => ({ ...prev, status: response.status }))
 
         // 404エラーを特別に処理
         if (response.status === 404) {
@@ -80,7 +80,7 @@ export default function TeacherSchedule() {
         const result = await response.json()
 
         // レスポンスの内容をデバッグ情報に追加
-        setDebugInfo((prev) => ({
+        setDebugInfo((prev: any) => ({
           ...prev,
           hasData: !!result.data,
           dataLength: result.data ? result.data.length : 0,
@@ -394,7 +394,7 @@ export default function TeacherSchedule() {
         )}
       </div>
 
-      <ListView data={filteredData} filter={{ year: "1", class: "A" }} selectedInstructor={selectedInstructor} />
+  <ListView data={filteredData} filter={{ year: "1", class: "A" }} selectedInstructor={selectedInstructor} showExamsOnly={false} />
     </div>
   )
 }

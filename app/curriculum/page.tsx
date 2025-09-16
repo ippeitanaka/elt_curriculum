@@ -6,8 +6,16 @@ import Loading from "./loading"
 
 export const dynamic = "force-dynamic"
 
-async function fetchAllData(supabase) {
-  let allData = []
+export async function generateMetadata({ searchParams }: { searchParams: { year?: string; class?: string } }) {
+  const year = searchParams?.year || "1"
+  const cls = searchParams?.class || "A"
+  return {
+    title: `${year}年${cls}クラス`,
+  }
+}
+
+async function fetchAllData(supabase: any) {
+  let allData: any[] = []
   let hasMore = true
   let start = 0
   const pageSize = 1000
@@ -39,7 +47,7 @@ async function fetchAllData(supabase) {
   return allData
 }
 
-export default async function Page({ searchParams }) {
+export default async function Page({ searchParams }: { searchParams: { year?: string; class?: string } }) {
   const year = searchParams.year || "1"
   const classParam = searchParams.class || "A"
 

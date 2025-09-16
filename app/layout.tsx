@@ -53,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 
 export const metadata = {
+  title: "ELT カリキュラム",
   generator: 'v0.dev',
   verification: {
     google: 'qObQsnGEBkczrciecDvtAZ7BJlfRxhGicVmM0lVG0eA',
