@@ -1,4 +1,9 @@
 import Link from "next/link"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "カリキュラムビューアー",
+}
 
 export default function Home() {
   const classes = ["A", "B", "N"]

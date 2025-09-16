@@ -1,6 +1,11 @@
 import { Suspense } from "react"
 import DailyViewer from "../../components/DailyViewer"
 import Loading from "../curriculum/loading"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "全学年表示",
+}
 
 export const dynamic = "force-dynamic"
 
