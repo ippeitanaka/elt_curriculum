@@ -1,6 +1,6 @@
 import Link from "next/link"
 export const metadata = {
-  title: "ELT カリキュラム",
+  title: "ELTカリキュラムアプリ",
 }
 
 export default function Home() {
