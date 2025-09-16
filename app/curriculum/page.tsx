@@ -3,8 +3,22 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
 import CurriculumViewer from "../../components/CurriculumViewer"
 import Loading from "./loading"
+import type { Metadata } from "next"
 
 export const dynamic = "force-dynamic"
+
+type Props = {
+  searchParams: { year?: string; class?: string }
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const year = searchParams.year || "1"
+  const classParam = searchParams.class || "A"
+  
+  return {
+    title: `${year}年${classParam}クラス`,
+  }
+}
 
 async function fetchAllData(supabase) {
   let allData = []
@@ -39,7 +53,7 @@ async function fetchAllData(supabase) {
   return allData
 }
 
-export default async function Page({ searchParams }) {
+export default async function Page({ searchParams }: Props) {
   const year = searchParams.year || "1"
   const classParam = searchParams.class || "A"
 

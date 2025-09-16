@@ -52,9 +52,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   )
 }
 
-export const metadata = {
-  generator: 'v0.dev',
-  verification: {
-    google: 'qObQsnGEBkczrciecDvtAZ7BJlfRxhGicVmM0lVG0eA',
-  },
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: { default: "カリキュラムビューアー | 救急救命士学科", template: "%s | 救急救命士学科" },
+  description: "TMC 救急救命士学科のカリキュラム表示サイト",
+  generator: "v0.dev",
+  verification: { google: "qObQsnGEBkczrciecDvtAZ7BJlfRxhGicVmM0lVG0eA" },
 };
