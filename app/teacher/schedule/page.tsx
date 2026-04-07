@@ -145,6 +145,29 @@ export default function TeacherSchedule() {
     return () => clearInterval(intervalId)
   }, [router, fetchData])
 
+  // データのカラム名から実際の年・クラス組み合わせを動的に検出
+  const yearClassCombos = useMemo(() => {
+    if (!data || data.length === 0) return []
+    const firstItem = data.find((item) => item && typeof item === "object")
+    if (!firstItem) return []
+    const combos: { year: number; cls: string }[] = []
+    Object.keys(firstItem).forEach((key) => {
+      const match = key.match(/^(\d+)年([A-Za-z])クラス担当講師名$/)
+      if (match) {
+        combos.push({ year: parseInt(match[1]), cls: match[2] })
+      }
+    })
+    // カラムが見つからない場合は従来のフォールバック
+    if (combos.length === 0) {
+      for (let i = 1; i <= 3; i++) {
+        for (const cls of ["A", "B", "N"]) {
+          combos.push({ year: i, cls })
+        }
+      }
+    }
+    return combos
+  }, [data])
+
   const instructors = useMemo(() => {
     if (!data || data.length === 0) return ["全て"]
 
@@ -152,18 +175,15 @@ export default function TeacherSchedule() {
     data.forEach((item) => {
       if (!item) return // null チェック
 
-      for (let i = 1; i <= 3; i++) {
-        for (const cls of ["A", "B", "N"]) {
-          const instructor = item[`${i}年${cls}クラス担当講師名`]
-          if (instructor && instructor !== "試験" && instructor !== "マイスタディ") {
-            // 自宅学習からマイスタディに変更
-            instructorSet.add(instructor)
-          }
+      yearClassCombos.forEach(({ year, cls }) => {
+        const instructor = item[`${year}年${cls}クラス担当講師名`]
+        if (instructor && instructor !== "試験" && instructor !== "マイスタディ") {
+          instructorSet.add(instructor)
         }
-      }
+      })
     })
     return ["全て", ...Array.from(instructorSet).sort()]
-  }, [data])
+  }, [data, yearClassCombos])
 
   const subjects = useMemo(() => {
     if (!data || data.length === 0) return ["全て"]
@@ -172,17 +192,15 @@ export default function TeacherSchedule() {
     data.forEach((item) => {
       if (!item) return // null チェック
 
-      for (let i = 1; i <= 3; i++) {
-        for (const cls of ["A", "B", "N"]) {
-          const subject = item[`${i}年${cls}クラスの授業内容`]
-          if (subject && subject.trim() !== "" && subject !== "マイスタディ") {
-            subjectSet.add(subject)
-          }
+      yearClassCombos.forEach(({ year, cls }) => {
+        const subject = item[`${year}年${cls}クラスの授業内容`]
+        if (subject && subject.trim() !== "" && subject !== "マイスタディ") {
+          subjectSet.add(subject)
         }
-      }
+      })
     })
     return ["全て", ...Array.from(subjectSet).sort()]
-  }, [data])
+  }, [data, yearClassCombos])
 
   const filteredData = useMemo(() => {
     if (!data || data.length === 0) return []
@@ -191,30 +209,28 @@ export default function TeacherSchedule() {
       .filter((item): item is ScheduleItem => item !== null && typeof item === "object") // null チェック
       .flatMap((item) => {
         const filteredClasses: ScheduleItem[] = []
-        for (let i = 1; i <= 3; i++) {
-          for (const cls of ["A", "B", "N"]) {
-            const instructor = item[`${i}年${cls}クラス担当講師名`]
-            const subject = item[`${i}年${cls}クラスの授業内容`]
-            
-            // 講師フィルタのチェック
-            const instructorMatch = selectedInstructor === "全て" || instructor === selectedInstructor
-            
-            // 授業内容フィルタのチェック
-            const subjectMatch = selectedSubject === "全て" || subject === selectedSubject
-            
-            if (instructorMatch && subjectMatch && (instructor || subject)) {
-              filteredClasses.push({
-                ...item,
-                filteredYear: i,
-                filteredClass: cls,
-              })
-            }
+        yearClassCombos.forEach(({ year, cls }) => {
+          const instructor = item[`${year}年${cls}クラス担当講師名`]
+          const subject = item[`${year}年${cls}クラスの授業内容`]
+
+          // 講師フィルタのチェック
+          const instructorMatch = selectedInstructor === "全て" || instructor === selectedInstructor
+
+          // 授業内容フィルタのチェック
+          const subjectMatch = selectedSubject === "全て" || subject === selectedSubject
+
+          if (instructorMatch && subjectMatch && (instructor || subject)) {
+            filteredClasses.push({
+              ...item,
+              filteredYear: year,
+              filteredClass: cls,
+            })
           }
-        }
+        })
         return filteredClasses
       })
       .filter((item) => item.filteredYear !== undefined)
-  }, [data, selectedInstructor, selectedSubject])
+  }, [data, selectedInstructor, selectedSubject, yearClassCombos])
 
   // ローディング中の表示を改善
   if (isLoading) {
