@@ -175,15 +175,24 @@ export default function TeacherSchedule() {
     data.forEach((item) => {
       if (!item) return // null チェック
 
-      yearClassCombos.forEach(({ year, cls }) => {
-        const instructor = item[`${year}年${cls}クラス担当講師名`]
-        if (instructor && instructor !== "試験" && instructor !== "マイスタディ") {
-          instructorSet.add(instructor)
+      // 「講師」を含む全カラムから講師名を抽出（カラム名形式の違いに対応）
+      Object.keys(item).forEach((key) => {
+        if (key.includes("講師")) {
+          const instructor = item[key]
+          if (
+            instructor &&
+            typeof instructor === "string" &&
+            instructor.trim() !== "" &&
+            instructor !== "試験" &&
+            instructor !== "マイスタディ"
+          ) {
+            instructorSet.add(instructor.trim())
+          }
         }
       })
     })
     return ["全て", ...Array.from(instructorSet).sort()]
-  }, [data, yearClassCombos])
+  }, [data])
 
   const subjects = useMemo(() => {
     if (!data || data.length === 0) return ["全て"]
@@ -210,11 +219,18 @@ export default function TeacherSchedule() {
       .flatMap((item) => {
         const filteredClasses: ScheduleItem[] = []
         yearClassCombos.forEach(({ year, cls }) => {
-          const instructor = item[`${year}年${cls}クラス担当講師名`]
+          // 標準カラム名を優先し、なければ「講師」を含むカラムを柔軟に検索
+          const instructorStdKey = `${year}年${cls}クラス担当講師名`
+          const instructorKey = item[instructorStdKey] !== undefined
+            ? instructorStdKey
+            : Object.keys(item).find((k) => k.startsWith(`${year}年${cls}`) && k.includes("講師")) || instructorStdKey
+          const instructor = item[instructorKey]
           const subject = item[`${year}年${cls}クラスの授業内容`]
 
           // 講師フィルタのチェック
-          const instructorMatch = selectedInstructor === "全て" || instructor === selectedInstructor
+          const instructorMatch =
+            selectedInstructor === "全て" ||
+            (instructor && typeof instructor === "string" && instructor.trim() === selectedInstructor)
 
           // 授業内容フィルタのチェック
           const subjectMatch = selectedSubject === "全て" || subject === selectedSubject
