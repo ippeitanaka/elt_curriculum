@@ -357,26 +357,20 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
           <ViewToggle view={view} setView={setView} />
         </div>
 
-        <div className="mt-3 grid gap-2 sm:mt-4 sm:gap-3 sm:grid-cols-2">
-          <div className="rounded-[1rem] bg-[#fff6ef] p-3 text-slate-700 sm:rounded-[1.4rem] sm:p-4">
-            <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#a14c1f]">
+        <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2">
+          <div className="rounded-[0.9rem] bg-[#fff6ef] px-3 py-2.5 text-slate-700 sm:rounded-[1.2rem] sm:px-4 sm:py-3">
+            <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#a14c1f] sm:text-xs sm:tracking-[0.22em]">
               <CalendarDays size={14} />
               Current Focus
             </div>
-            <p className="text-base font-bold text-slate-900 sm:text-lg">{filter.year}年 {filter.class}クラス</p>
-            <p className="mt-1 text-xs leading-5 text-slate-600 sm:text-sm sm:leading-6">月の流れを俯瞰しながら授業種別と担当講師をまとめて確認できます。</p>
+            <p className="mt-1 text-sm font-bold text-slate-900 sm:text-base">{filter.year}年 {filter.class}クラス</p>
           </div>
-          <div className="rounded-[1rem] bg-slate-900 p-3 text-white sm:rounded-[1.4rem] sm:p-4">
-            <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">
+          <div className="rounded-[0.9rem] bg-slate-900 px-3 py-2.5 text-white sm:rounded-[1.2rem] sm:px-4 sm:py-3">
+            <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300 sm:text-xs sm:tracking-[0.22em]">
               <ListChecks size={14} />
               View Mode
             </div>
-            <p className="text-base font-bold sm:text-lg">{view === "calendar" ? "月間カレンダー" : "一覧テーブル"}</p>
-            <p className="mt-1 text-xs leading-5 text-slate-300 sm:text-sm sm:leading-6">
-              {view === "calendar"
-                ? "日付のまとまりとイベントの偏りをすばやく把握できます。"
-                : "時系列で詳細を追いながら試験日だけを抽出できます。"}
-            </p>
+            <p className="mt-1 text-sm font-bold sm:text-base">{view === "calendar" ? "月間カレンダー" : "一覧テーブル"}</p>
           </div>
         </div>
       </div>
