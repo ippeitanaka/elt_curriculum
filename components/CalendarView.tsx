@@ -191,7 +191,7 @@ export default function CalendarView({ data, filter }: CalendarViewProps) {
         }}
       >
         <span className="calendar-event-icon">{icon}</span>
-        <span className="truncate flex-1">{event.title}</span>
+        <span className="calendar-event-title">{event.title}</span>
       </div>
     )
   }
@@ -216,7 +216,7 @@ export default function CalendarView({ data, filter }: CalendarViewProps) {
   }
 
   return (
-    <div className={`rounded-[1.8rem] border border-white/70 bg-white/70 p-3 shadow-[0_20px_50px_rgba(15,23,42,0.08)] ${bizUdGothic.variable}`}>
+    <div className={`calendar-shell rounded-[1.3rem] border border-white/70 bg-white/70 p-2 shadow-[0_16px_36px_rgba(15,23,42,0.08)] sm:rounded-[1.8rem] sm:p-3 sm:shadow-[0_20px_50px_rgba(15,23,42,0.08)] ${bizUdGothic.variable}`}>
       <Calendar
         localizer={localizer}
         events={events}
