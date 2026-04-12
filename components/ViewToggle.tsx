@@ -10,25 +10,29 @@ type ViewToggleProps = {
 
 export default function ViewToggle({ view, setView }: ViewToggleProps) {
   return (
-    <div className="flex bg-gray-100 rounded p-0.5">
+    <div className="flex rounded-full bg-slate-100 p-1">
       <button
         onClick={() => setView("calendar")}
-        className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-all ${
-          view === "calendar" ? "bg-white text-blue-600 shadow-sm" : "text-gray-600 hover:text-gray-800"
+        className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+          view === "calendar"
+            ? "bg-white text-slate-900 shadow-[0_10px_25px_rgba(15,23,42,0.08)]"
+            : "text-slate-500 hover:text-slate-900"
         }`}
         aria-label="カレンダー表示"
       >
-        <Calendar size={12} />
+        <Calendar size={15} />
         カレンダー
       </button>
       <button
         onClick={() => setView("list")}
-        className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-all ${
-          view === "list" ? "bg-white text-blue-600 shadow-sm" : "text-gray-600 hover:text-gray-800"
+        className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+          view === "list"
+            ? "bg-white text-slate-900 shadow-[0_10px_25px_rgba(15,23,42,0.08)]"
+            : "text-slate-500 hover:text-slate-900"
         }`}
         aria-label="リスト表示"
       >
-        <List size={12} />
+        <List size={15} />
         リスト
       </button>
     </div>

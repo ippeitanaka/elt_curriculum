@@ -5,7 +5,7 @@ import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 import DatePicker from "./DatePicker"
 import Link from "next/link"
-import { Calendar, Home, Clock, User } from "lucide-react"
+import { ArrowLeft, Calendar, Clock, Layers3, Sparkles, User } from "lucide-react"
 import Image from "next/image"
 
 // データ項目の型定義
@@ -60,20 +60,20 @@ export default function DailyViewer() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[30vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-pink-400 mb-2"></div>
-        <p className="text-sm text-pink-600">データを読み込んでいます...</p>
+      <div className="flex min-h-[40vh] flex-col items-center justify-center rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
+        <div className="mb-3 h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-slate-900"></div>
+        <p className="text-sm font-medium text-slate-600">データを読み込んでいます...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="text-center text-red-600">
-        <p className="text-sm">エラーが発生しました: {error}</p>
+      <div className="rounded-[1.6rem] border border-red-200 bg-red-50/90 p-6 text-center text-red-700 shadow-sm">
+        <p className="text-sm font-medium">エラーが発生しました: {error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-2 bg-pink-500 text-white px-2 py-1 rounded-full text-sm hover:bg-pink-600"
+          className="mt-3 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
         >
           再試行
         </button>
@@ -97,171 +97,242 @@ export default function DailyViewer() {
     })
 
   return (
-    <div className="max-w-full mx-auto">
-      <div className="mb-3 flex justify-between items-center bg-gradient-to-r from-pink-100 to-purple-100 rounded-lg p-2 shadow-sm">
-        <Link
-          href="/"
-          className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-full text-white bg-pink-500 hover:bg-pink-600 focus:outline-none shadow-sm"
-        >
-          <Home size={14} className="mr-1" /> ホーム
-        </Link>
+    <div className="mx-auto max-w-7xl space-y-5">
+      <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(255,241,232,0.98))] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-8">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-[#a14c1f]">
+            <Sparkles size={14} />
+            Daily Board
+          </div>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-black text-slate-900 sm:text-4xl">全学年の日次タイムライン</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                その日の授業を学年横断で俯瞰し、昼間部と夜間部の切り替わりも一目で確認できる構成にしています。
+              </p>
+            </div>
 
-        <div className="text-sm font-medium text-purple-700 flex items-center">
-          <Calendar size={14} className="mr-1" />
-          {format(selectedDate || new Date(), "yyyy年MM月dd日 (eee)", { locale: ja })}
-          {selectedDate && format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") && (
-            <span className="ml-1">
-              <Image
-                src="/images/qyan-transparent.png"
-                alt="今日"
-                width={20}
-                height={20}
-                className="inline-block animate-bounce"
-              />
-            </span>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/85 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:text-slate-900"
+            >
+              <ArrowLeft size={16} />
+              ホーム
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="rounded-[1.8rem] border border-white/70 bg-white/85 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fff1e8] text-[#ff8a5b]">
+                <Calendar size={22} />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Selected Date</p>
+                <p className="text-lg font-bold text-slate-900">
+                  {format(selectedDate || new Date(), "yyyy年MM月dd日 (eee)", { locale: ja })}
+                </p>
+              </div>
+            </div>
+            <p className="text-sm leading-6 text-slate-600">日付を切り替えると、その日の全学年スケジュールに即座に反映されます。</p>
+          </div>
+
+          <div className="rounded-[1.8rem] border border-white/70 bg-slate-900 p-5 text-white shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
+                <Layers3 size={22} />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Coverage</p>
+                <p className="text-lg font-bold">1日分を一画面で確認</p>
+              </div>
+            </div>
+            <p className="text-sm leading-6 text-slate-300">各時限の授業内容、担当講師、試験種別を色分けして表示します。</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="space-y-5">
+          <div className="rounded-[1.8rem] border border-white/70 bg-white/80 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+            <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
+          </div>
+
+          <div className="rounded-[1.8rem] border border-white/70 bg-white/85 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-900">
+                <Clock size={18} />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Schedule Notes</p>
+                <p className="text-lg font-bold text-slate-900">表示ルール</p>
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              <div className="rounded-2xl bg-[#fff6ef] p-4 text-sm leading-6 text-slate-700">1限から4限は昼間部を表示します。</div>
+              <div className="rounded-2xl bg-[#eef6ff] p-4 text-sm leading-6 text-slate-700">5限から6限は夜間部を表示します。</div>
+              <div className="rounded-2xl bg-slate-100 p-4 text-sm leading-6 text-slate-700">試験と模試は色で強調されます。</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between rounded-[1.6rem] border border-white/70 bg-white/80 px-5 py-4 shadow-sm">
+            <div className="flex items-center gap-3 text-slate-700">
+              <Calendar size={18} />
+              <div className="text-sm font-semibold">
+                {format(selectedDate || new Date(), "yyyy年MM月dd日 (eee)", { locale: ja })}
+              </div>
+            </div>
+            {selectedDate && format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") && (
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#fff1e8] px-3 py-1 text-xs font-semibold text-[#a14c1f]">
+                <Image
+                  src="/images/qyan-transparent.png"
+                  alt="今日"
+                  width={18}
+                  height={18}
+                  className="inline-block animate-bounce"
+                />
+                TODAY
+              </span>
+            )}
+          </div>
+
+          {filteredData.length === 0 ? (
+            <div className="rounded-[1.8rem] border border-yellow-200 bg-yellow-50/90 p-8 text-center shadow-sm">
+              <div className="flex flex-col items-center">
+                <Calendar size={26} className="mb-2 text-yellow-600" />
+                <p className="text-sm font-medium text-yellow-800">
+                  {selectedDate
+                    ? `${format(selectedDate, "yyyy年MM月dd日", { locale: ja })}のデータはありません`
+                    : "日付を選択してください"}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <h2 className="rounded-[1.4rem] bg-slate-900 px-5 py-4 text-base font-bold text-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
+                {format(selectedDate, "yyyy年MM月dd日 (eee)", { locale: ja })} の全学年表示
+              </h2>
+
+              {sortedData.map((item, index) => {
+                const periodNum = Number.parseInt((item.時限 || "").replace(/[^0-9]/g, ""), 10) || 0
+                const showDayClasses = periodNum <= 4
+                const showNightClasses = periodNum >= 5
+                const bgColors = [
+                  "from-[#fff6ef] to-white border-[#ffd9c7]",
+                  "from-[#eef6ff] to-white border-[#cfe0ff]",
+                  "from-[#effaf6] to-white border-[#cdeee1]",
+                  "from-[#fff7db] to-white border-[#f7df9c]",
+                  "from-[#f9f5ff] to-white border-[#e4d8ff]",
+                  "from-[#f4f7fb] to-white border-[#d9e2ee]",
+                ]
+                const colorIndex = (periodNum - 1) % bgColors.length
+                const bgColorClass = bgColors[colorIndex]
+
+                return (
+                  <div key={index} className={`rounded-[1.8rem] border bg-gradient-to-r ${bgColorClass} p-4 shadow-[0_16px_40px_rgba(15,23,42,0.05)]`}>
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                      <h3 className="inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-slate-900 shadow-sm">
+                        <Clock size={14} />
+                        {item.時限}時限 ({item.曜日})
+                      </h3>
+                      <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+                        {showDayClasses ? "昼間部" : "夜間部"}
+                      </span>
+                    </div>
+
+                    <div className="space-y-4">
+                      {showDayClasses && (
+                        <div>
+                          <h4 className="mb-2 inline-block rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-600">
+                            昼間部
+                          </h4>
+                          <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                            {years.map((year) =>
+                              dayClasses.map((cls) => (
+                                <div key={`${year}${cls}`} className="overflow-hidden rounded-[1.2rem] border border-white/80 bg-white/80 shadow-sm">
+                                  <div className="border-b border-slate-100 px-3 py-2 text-xs font-bold text-slate-700">
+                                    {year}年{cls}クラス
+                                  </div>
+                                  <ClassContent item={item} year={year} cls={cls} />
+                                </div>
+                              )),
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {showNightClasses && (
+                        <div>
+                          <h4 className="mb-2 inline-block rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-600">
+                            夜間部
+                          </h4>
+                          <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                            {years.map((year) =>
+                              nightClasses.map((cls) => (
+                                <div key={`${year}${cls}`} className="overflow-hidden rounded-[1.2rem] border border-white/80 bg-white/80 shadow-sm">
+                                  <div className="border-b border-slate-100 px-3 py-2 text-xs font-bold text-slate-700">
+                                    {year}年{cls}クラス
+                                  </div>
+                                  <ClassContent item={item} year={year} cls={cls} />
+                                </div>
+                              )),
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           )}
         </div>
       </div>
-
-      <div className="mb-3 bg-white rounded-lg shadow-sm p-2 border border-pink-200">
-        <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
-      </div>
-
-      {filteredData.length === 0 ? (
-        <div className="bg-yellow-50 border-2 border-yellow-200 p-3 rounded-lg text-center">
-          <div className="flex flex-col items-center">
-            <Calendar size={24} className="text-yellow-500 mb-1" />
-            <p className="text-sm text-yellow-700">
-              {selectedDate
-                ? `${format(selectedDate, "yyyy年MM月dd日", { locale: ja })}のデータはありません`
-                : "日付を選択してください"}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          <h2 className="text-base font-bold text-center bg-gradient-to-r from-pink-500 to-purple-500 text-white py-1 px-2 rounded-full shadow-sm">
-            {format(selectedDate, "yyyy年MM月dd日 (eee)", { locale: ja })}の全学年表示
-          </h2>
-
-          {sortedData.map((item, index) => {
-            // 時限を数値に変換（"1" → 1, "2" → 2, ...）
-            const periodNum = Number.parseInt((item.時限 || "").replace(/[^0-9]/g, ""), 10) || 0
-
-            // 1限～4限は昼間部のみ、5限～6限は夜間部のみ表示
-            const showDayClasses = periodNum <= 4
-            const showNightClasses = periodNum >= 5
-
-            // 時限ごとに異なる背景色を設定
-            const bgColors = [
-              "from-blue-50 to-cyan-50 border-blue-200",
-              "from-green-50 to-teal-50 border-green-200",
-              "from-yellow-50 to-amber-50 border-yellow-200",
-              "from-orange-50 to-rose-50 border-orange-200",
-              "from-pink-50 to-fuchsia-50 border-pink-200",
-              "from-purple-50 to-indigo-50 border-purple-200",
-            ]
-            const colorIndex = (periodNum - 1) % bgColors.length
-            const bgColorClass = bgColors[colorIndex]
-
-            return (
-              <div key={index} className={`bg-gradient-to-r ${bgColorClass} rounded-lg shadow-sm p-1.5 border`}>
-                <h3 className="text-sm font-semibold mb-1 flex items-center justify-center bg-white bg-opacity-70 rounded-full px-2 py-0.5 shadow-sm">
-                  <Clock size={14} className="mr-1" />
-                  {item.時限}時限 ({item.曜日})
-                </h3>
-
-                {/* 時限に応じて表示するクラスを切り替え */}
-                <div className="space-y-1">
-                  {/* 昼間部（AクラスとBクラス）- 1限～4限のみ表示 */}
-                  {showDayClasses && (
-                    <div>
-                      <h4 className="text-xs font-medium text-gray-600 mb-0.5 bg-white bg-opacity-50 rounded-full px-2 py-0.5 inline-block">
-                        昼間部
-                      </h4>
-                      <div className="grid grid-cols-6 gap-0.5">
-                        {years.map((year) =>
-                          dayClasses.map((cls) => (
-                            <div key={`${year}${cls}`} className="col-span-1">
-                              <div className="text-xs font-medium bg-white bg-opacity-70 px-1 py-0.5 rounded-t-md shadow-sm">
-                                {year}年{cls}クラス
-                              </div>
-                              <ClassContent item={item} year={year} cls={cls} />
-                            </div>
-                          )),
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 夜間部（Nクラス）- 5限～6限のみ表示 */}
-                  {showNightClasses && (
-                    <div>
-                      <h4 className="text-xs font-medium text-gray-600 mb-0.5 bg-white bg-opacity-50 rounded-full px-2 py-0.5 inline-block">
-                        夜間部
-                      </h4>
-                      <div className="grid grid-cols-3 gap-0.5">
-                        {years.map((year) =>
-                          nightClasses.map((cls) => (
-                            <div key={`${year}${cls}`} className="col-span-1">
-                              <div className="text-xs font-medium bg-white bg-opacity-70 px-1 py-0.5 rounded-t-md shadow-sm">
-                                {year}年{cls}クラス
-                              </div>
-                              <ClassContent item={item} year={year} cls={cls} />
-                            </div>
-                          )),
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
     </div>
   )
 }
 
-// クラスコンテンツを表示するコンポーネント
 function ClassContent({ item, year, cls }) {
-  // データフィールドの参照方法
   const content = item[`${year}年${cls}クラスの授業内容`]
   const teacher = item[`${year}年${cls}クラス担当講師名`]
   const periods = item[`${year}年${cls}クラスコマ数`]
 
   if (!content && !periods) {
-    return <div className="bg-white bg-opacity-50 px-1 py-0.5 text-xs text-gray-400 h-10 rounded-b-md">データなし</div>
+    return <div className="h-20 bg-slate-50 px-3 py-3 text-xs text-slate-400">データなし</div>
   }
 
   const isExam = periods?.includes("試験")
   const isMockExam = periods?.includes("模試")
   const isSelfStudy = content === "マイスタディ" || content === "自宅学習"
 
-  let bgColorClass = "bg-white bg-opacity-70"
+  let bgColorClass = "bg-white"
   if (isExam) bgColorClass = "bg-red-50"
   else if (isMockExam) bgColorClass = "bg-orange-50"
   else if (isSelfStudy) bgColorClass = "bg-sky-50"
 
   return (
-    <div className={`px-1 py-0.5 h-10 overflow-hidden ${bgColorClass} rounded-b-md shadow-sm`}>
-      {content && <p className="text-xs line-clamp-1 leading-tight font-medium">{content}</p>}
-      <div className="flex items-center justify-between mt-0.5">
+    <div className={`h-20 overflow-hidden px-3 py-3 ${bgColorClass}`}>
+      {content && <p className="line-clamp-2 text-sm font-semibold leading-5 text-slate-800">{content}</p>}
+      <div className="mt-2 flex items-center justify-between gap-2">
         {teacher && (
-          <div className="flex items-center">
-            <User size={8} className="text-gray-500 mr-0.5" />
-            <p className="text-[10px] text-gray-600 truncate">{teacher}</p>
+          <div className="flex min-w-0 items-center">
+            <User size={10} className="mr-1 text-slate-500" />
+            <p className="truncate text-[11px] text-slate-600">{teacher}</p>
           </div>
         )}
         {periods && (
           <span
-            className={`text-[10px] px-1 py-0.5 rounded-full leading-none ${
+            className={`rounded-full px-2 py-1 text-[10px] font-semibold leading-none ${
               isExam
-                ? "bg-red-100 text-red-800"
+                ? "bg-red-100 text-red-700"
                 : isMockExam
-                  ? "bg-orange-100 text-orange-800"
-                  : "bg-pink-100 text-pink-800"
+                  ? "bg-orange-100 text-orange-700"
+                  : isSelfStudy
+                    ? "bg-sky-100 text-sky-700"
+                    : "bg-slate-100 text-slate-700"
             }`}
           >
             {periods}

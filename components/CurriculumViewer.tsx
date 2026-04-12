@@ -5,7 +5,8 @@ import CalendarView from "./CalendarView"
 import ListView from "./ListView"
 import FilterComponent from "./FilterComponent"
 import ViewToggle from "./ViewToggle"
-import { M_PLUS_Rounded_1c } from "next/font/google"
+import { BIZ_UDGothic } from "next/font/google"
+import { CalendarDays, ListChecks } from "lucide-react"
 
 // データ項目の型定義
 interface ScheduleItem {
@@ -15,12 +16,11 @@ interface ScheduleItem {
   [key: string]: any // その他のプロパティ（クラス情報など）
 }
 
-// かわいい丸みのあるフォントに変更
-const mplusRounded = M_PLUS_Rounded_1c({
-  weight: ["400", "500", "700"],
+const bizUdGothic = BIZ_UDGothic({
+  weight: ["400", "700"],
   subsets: ["latin"],
   preload: true,
-  variable: "--font-mplus-rounded",
+  variable: "--font-biz-ud-gothic",
 })
 
 // プレビュー用のモックデータ
@@ -328,33 +328,56 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
 
   // コンテナの高さとパディングを最小化
   return (
-    <div className={`max-w-7xl mx-auto ${mplusRounded.variable}`}>
-      {/* プレビュー環境での注意書き - 更にコンパクト */}
+    <div className={`mx-auto max-w-7xl ${bizUdGothic.variable}`}>
       {typeof window !== "undefined" && window.location.hostname.includes("v0.dev") && (
-        <div className="bg-blue-50 border border-blue-200 rounded p-1 mb-1">
-          <p className="text-blue-800 text-xs">
-            <strong>プレビュー:</strong> サンプルデータを表示中
+        <div className="mb-4 rounded-2xl border border-blue-200/70 bg-blue-50/80 p-3">
+          <p className="text-xs font-medium text-blue-900">
+            プレビュー環境のためサンプルデータを表示しています。
           </p>
         </div>
       )}
 
-      {/* フィルター部分を更にコンパクト */}
-      <div className="bg-white rounded shadow-sm border border-gray-200 p-1 mb-1">
-        <div className="flex flex-wrap items-center justify-between gap-1">
-          <div className="flex items-center gap-1">
+      <div className="mb-4 overflow-hidden rounded-[1.8rem] border border-white/70 bg-white/85 p-4 shadow-[0_20px_50px_rgba(15,23,42,0.08)] sm:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <FilterComponent filter={filter} setFilter={setFilter} />
             {view === "list" && (
               <button
                 onClick={() => setShowExamsOnly(!showExamsOnly)}
-                className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
-                  showExamsOnly ? "bg-blue-500 text-white shadow-sm" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  showExamsOnly
+                    ? "bg-slate-900 text-white shadow-[0_12px_30px_rgba(15,23,42,0.2)]"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
-                {showExamsOnly ? "全て" : "試験のみ"}
+                {showExamsOnly ? "全件表示" : "試験のみ表示"}
               </button>
             )}
           </div>
           <ViewToggle view={view} setView={setView} />
+        </div>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-[1.4rem] bg-[#fff6ef] p-4 text-slate-700">
+            <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#a14c1f]">
+              <CalendarDays size={14} />
+              Current Focus
+            </div>
+            <p className="text-lg font-bold text-slate-900">{filter.year}年 {filter.class}クラス</p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">月の流れを俯瞰しながら授業種別と担当講師をまとめて確認できます。</p>
+          </div>
+          <div className="rounded-[1.4rem] bg-slate-900 p-4 text-white">
+            <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">
+              <ListChecks size={14} />
+              View Mode
+            </div>
+            <p className="text-lg font-bold">{view === "calendar" ? "月間カレンダー" : "一覧テーブル"}</p>
+            <p className="mt-1 text-sm leading-6 text-slate-300">
+              {view === "calendar"
+                ? "日付のまとまりとイベントの偏りをすばやく把握できます。"
+                : "時系列で詳細を追いながら試験日だけを抽出できます。"}
+            </p>
+          </div>
         </div>
       </div>
 

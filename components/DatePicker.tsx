@@ -33,32 +33,37 @@ export default function DatePicker({ selectedDate, onDateChange }) {
   return (
     <div className="relative">
       <div
-        className="flex items-center justify-between border-2 border-pink-200 rounded-lg p-2 cursor-pointer bg-white hover:bg-pink-50 transition-colors"
+        className="flex cursor-pointer items-center justify-between rounded-[1.4rem] border border-white/80 bg-white/90 p-4 shadow-[0_16px_40px_rgba(15,23,42,0.06)] transition hover:-translate-y-0.5"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center">
-          <CalendarIcon className="mr-2 h-4 w-4 text-pink-500" />
-          <span className="text-sm text-gray-700">{selectedDate ? formatDate(selectedDate) : "日付を選択"}</span>
+          <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#fff1e8] text-[#ff8a5b]">
+            <CalendarIcon className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Selected Day</p>
+            <span className="text-sm font-semibold text-slate-800">{selectedDate ? formatDate(selectedDate) : "日付を選択"}</span>
+          </div>
         </div>
-        <span className="text-xs bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full">タップして変更</span>
+        <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">変更</span>
       </div>
 
       {isOpen && (
-        <div className="absolute mt-1 p-3 bg-white border-2 border-pink-200 rounded-lg shadow-lg z-10 w-full">
+        <div className="absolute z-10 mt-2 w-full rounded-[1.6rem] border border-white/80 bg-white/95 p-4 shadow-[0_24px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl">
           <div className="flex justify-between items-center mb-3">
             <button
               onClick={handlePrevMonth}
-              className="p-1 hover:bg-pink-100 rounded-full text-pink-600"
+              className="rounded-full bg-slate-100 p-2 text-slate-600 transition hover:bg-slate-900 hover:text-white"
               aria-label="前月"
             >
               <ChevronLeft size={16} />
             </button>
-            <div className="text-sm font-medium text-gray-700">
+            <div className="text-sm font-bold text-slate-800">
               {format(currentMonth, "yyyy年MM月", { locale: ja })}
             </div>
             <button
               onClick={handleNextMonth}
-              className="p-1 hover:bg-pink-100 rounded-full text-pink-600"
+              className="rounded-full bg-slate-100 p-2 text-slate-600 transition hover:bg-slate-900 hover:text-white"
               aria-label="翌月"
             >
               <ChevronRight size={16} />
@@ -69,7 +74,7 @@ export default function DatePicker({ selectedDate, onDateChange }) {
             {["日", "月", "火", "水", "木", "金", "土"].map((day, index) => (
               <div
                 key={day}
-                className={`p-1 font-medium ${index === 0 ? "text-red-500" : index === 6 ? "text-blue-500" : "text-gray-600"}`}
+                className={`p-2 font-semibold ${index === 0 ? "text-red-500" : index === 6 ? "text-blue-500" : "text-slate-500"}`}
               >
                 {day}
               </div>
@@ -100,16 +105,16 @@ export default function DatePicker({ selectedDate, onDateChange }) {
               return (
                 <div
                   key={day}
-                  className={`p-1 cursor-pointer rounded-full text-center ${
+                  className={`cursor-pointer rounded-2xl p-2 text-center transition ${
                     isSelected
-                      ? "bg-pink-500 text-white font-bold"
+                      ? "bg-slate-900 text-white font-bold shadow-lg"
                       : isToday
-                        ? "bg-pink-100 text-pink-700 font-medium"
+                        ? "bg-[#fff1e8] font-semibold text-[#a14c1f]"
                         : isSunday
-                          ? "text-red-500 hover:bg-pink-50"
+                          ? "text-red-500 hover:bg-red-50"
                           : isSaturday
-                            ? "text-blue-500 hover:bg-pink-50"
-                            : "hover:bg-pink-50"
+                            ? "text-blue-500 hover:bg-blue-50"
+                            : "text-slate-700 hover:bg-slate-100"
                   }`}
                   onClick={() => handleDateClick(day)}
                 >

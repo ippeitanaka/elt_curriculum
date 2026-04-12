@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 32 100% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 19 100% 63%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
+    --secondary: 210 50% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 32 60% 95%;
+    --muted-foreground: 215 16% 39%;
+    --accent: 205 100% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --border: 30 28% 88%;
+    --input: 30 28% 88%;
+    --ring: 19 100% 63%;
+    --radius: 1rem;
   }
 
   .dark {
@@ -55,28 +55,30 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-mplus-rounded), sans-serif;
+    font-family: var(--font-biz-ud-gothic), sans-serif;
+    min-height: 100vh;
+    background-color: hsl(var(--background));
   }
 }
 
-/* カレンダーの改善されたスタイル - 最大化版 */
 .rbc-calendar {
-  font-family: var(--font-mplus-rounded), sans-serif;
-  background: white;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+  font-family: var(--font-biz-ud-gothic), sans-serif;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
   overflow: hidden;
   height: 100%;
 }
 
 .rbc-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0f172a;
   color: white;
   font-weight: 600;
-  padding: 4px 2px;
+  padding: 10px 4px;
   border: none;
-  font-size: 0.75rem;
-  min-height: 28px;
+  font-size: 0.78rem;
+  min-height: 40px;
 }
 
 .rbc-month-view {
@@ -86,7 +88,7 @@
 
 .rbc-date-cell {
   position: relative;
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid #edf2f7;
   min-height: 20px;
   padding: 0;
 }
@@ -95,14 +97,13 @@
   border-right: none;
 }
 
-/* 既存の日付表示を非表示にする */
 .rbc-date-cell > a {
   display: none;
 }
 
 .rbc-day-bg {
-  border-right: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
+  border-right: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
   min-height: calc((100vh - 150px) / 6);
 }
 
@@ -111,10 +112,10 @@
 }
 
 .rbc-today {
-  background-color: #fef3c7 !important;
-  border: 2px solid #f59e0b !important;
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px #f59e0b inset;
+  background-color: #fff3e8 !important;
+  border: 2px solid #ff8a5b !important;
+  border-radius: 18px;
+  box-shadow: 0 0 0 1px #ff8a5b inset;
   position: relative;
 }
 
@@ -123,7 +124,7 @@
 }
 
 .rbc-month-row {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #edf2f7;
   height: 120px;
   min-height: 120px;
 }
@@ -132,25 +133,23 @@
   border-bottom: none;
 }
 
-/* イベントのスタイリング - シンプル版 */
 .calendar-event {
-  border-radius: 3px;
-  margin: 0.5px;
-  padding: 1px 3px;
-  font-size: 0.65rem;
-  font-weight: 500;
+  border-radius: 999px;
+  margin: 1.5px 4px;
+  padding: 4px 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
   border: none !important;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   line-height: 1.1;
-  min-height: 16px;
+  min-height: 22px;
 }
 
-/* react-big-calendarのデフォルトイベントスタイルを完全に上書き */
 .rbc-event {
   border: none !important;
   outline: none !important;
@@ -185,7 +184,6 @@
   border: none !important;
 }
 
-/* すべてのイベント関連要素から枠線を削除 */
 .rbc-event,
 .rbc-event-content,
 .rbc-selected,
@@ -198,31 +196,28 @@
 
 .calendar-event:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
 }
 
-/* アイコンのレスポンシブ表示制御 */
 .calendar-event-icon {
   flex-shrink: 0;
 }
 
-/* シンプルな色分け - 試験と模擬試験のみ背景色変更 */
 .event-exam {
-  background: #fee2e2;
-  color: #000000;
+  background: linear-gradient(135deg, #ffe1df 0%, #ffc8bf 100%);
+  color: #7f1d1d;
 }
 
 .event-mock-exam {
-  background: #fef3c7;
-  color: #000000;
+  background: linear-gradient(135deg, #fff0bf 0%, #ffe08a 100%);
+  color: #7c4700;
 }
 
 .event-default {
-  background: #ffffff;
-  color: #000000;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  color: #0f172a;
 }
 
-/* 土日祝日のスタイリング */
 .rbc-day-bg.saturday {
   background-color: #eff6ff;
 }
@@ -232,16 +227,16 @@
   background-color: #fef2f2;
 }
 
-/* モバイル対応 - アイコンを非表示にして講義名を最大表示 */
 @media (max-width: 768px) {
   .rbc-calendar {
     font-size: 0.65rem;
+    border-radius: 20px;
   }
 
   .rbc-header {
-    padding: 3px 1px;
+    padding: 6px 2px;
     font-size: 0.65rem;
-    min-height: 24px;
+    min-height: 28px;
   }
 
   .rbc-day-bg {
@@ -254,14 +249,13 @@
   }
 
   .calendar-event {
-    font-size: 0.55rem;
-    padding: 0.5px 2px;
-    margin: 0.25px;
+    font-size: 0.58rem;
+    padding: 2px 6px;
+    margin: 1px 2px;
     min-height: 14px;
-    gap: 0; /* モバイルではアイコンとテキストの間隔をなくす */
+    gap: 0;
   }
 
-  /* モバイルではアイコンを非表示 */
   .calendar-event-icon {
     display: none;
   }
@@ -277,7 +271,6 @@
   }
 }
 
-/* タブレット対応 - アイコンは表示するが小さく */
 @media (min-width: 769px) and (max-width: 1024px) {
   .rbc-day-bg {
     min-height: 90px;
@@ -289,30 +282,28 @@
   }
 
   .calendar-event {
-    gap: 1px; /* タブレットではアイコンとテキストの間隔を狭く */
+    gap: 1px;
   }
 
   .calendar-event-icon {
-    display: block; /* タブレットではアイコンを表示 */
+    display: block;
   }
 }
 
-/* デスクトップ対応 - アイコンを通常表示 */
 @media (min-width: 1025px) {
   .calendar-event-icon {
     display: block;
   }
 }
 
-/* ダイアログのスタイリング */
 .dialog-overlay {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
 
 .dialog-content {
-  background: white;
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 24px;
   box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
