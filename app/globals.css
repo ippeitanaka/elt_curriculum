@@ -113,10 +113,6 @@
 
 .rbc-today {
   background-color: #fff3e8 !important;
-  border: 2px solid #ff8a5b !important;
-  border-radius: 18px;
-  box-shadow: 0 0 0 1px #ff8a5b inset;
-  position: relative;
 }
 
 .rbc-off-range-bg {
