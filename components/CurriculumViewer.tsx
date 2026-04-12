@@ -337,14 +337,14 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
         </div>
       )}
 
-      <div className="mb-4 overflow-hidden rounded-[1.8rem] border border-white/70 bg-white/85 p-4 shadow-[0_20px_50px_rgba(15,23,42,0.08)] sm:p-5">
+      <div className="mb-4 overflow-hidden rounded-[1.3rem] border border-white/70 bg-white/85 p-3 shadow-[0_16px_40px_rgba(15,23,42,0.08)] sm:rounded-[1.8rem] sm:p-5 sm:shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:gap-3">
             <FilterComponent filter={filter} setFilter={setFilter} />
             {view === "list" && (
               <button
                 onClick={() => setShowExamsOnly(!showExamsOnly)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                className={`w-full rounded-full px-3 py-2 text-xs font-semibold transition sm:w-auto sm:px-4 sm:text-sm ${
                   showExamsOnly
                     ? "bg-slate-900 text-white shadow-[0_12px_30px_rgba(15,23,42,0.2)]"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
@@ -357,22 +357,22 @@ export default function CurriculumViewer({ initialYear, initialClass, initialDat
           <ViewToggle view={view} setView={setView} />
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-[1.4rem] bg-[#fff6ef] p-4 text-slate-700">
+        <div className="mt-3 grid gap-2 sm:mt-4 sm:gap-3 sm:grid-cols-2">
+          <div className="rounded-[1rem] bg-[#fff6ef] p-3 text-slate-700 sm:rounded-[1.4rem] sm:p-4">
             <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#a14c1f]">
               <CalendarDays size={14} />
               Current Focus
             </div>
-            <p className="text-lg font-bold text-slate-900">{filter.year}年 {filter.class}クラス</p>
-            <p className="mt-1 text-sm leading-6 text-slate-600">月の流れを俯瞰しながら授業種別と担当講師をまとめて確認できます。</p>
+            <p className="text-base font-bold text-slate-900 sm:text-lg">{filter.year}年 {filter.class}クラス</p>
+            <p className="mt-1 text-xs leading-5 text-slate-600 sm:text-sm sm:leading-6">月の流れを俯瞰しながら授業種別と担当講師をまとめて確認できます。</p>
           </div>
-          <div className="rounded-[1.4rem] bg-slate-900 p-4 text-white">
+          <div className="rounded-[1rem] bg-slate-900 p-3 text-white sm:rounded-[1.4rem] sm:p-4">
             <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">
               <ListChecks size={14} />
               View Mode
             </div>
-            <p className="text-lg font-bold">{view === "calendar" ? "月間カレンダー" : "一覧テーブル"}</p>
-            <p className="mt-1 text-sm leading-6 text-slate-300">
+            <p className="text-base font-bold sm:text-lg">{view === "calendar" ? "月間カレンダー" : "一覧テーブル"}</p>
+            <p className="mt-1 text-xs leading-5 text-slate-300 sm:text-sm sm:leading-6">
               {view === "calendar"
                 ? "日付のまとまりとイベントの偏りをすばやく把握できます。"
                 : "時系列で詳細を追いながら試験日だけを抽出できます。"}
