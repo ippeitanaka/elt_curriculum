@@ -95,16 +95,16 @@ export default function ListView({ data, filter, showExamsOnly }) {
       ref={tableRef}
       className="max-h-[calc(100vh-180px)] overflow-auto rounded-[1.8rem] border border-white/70 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)]"
     >
-      <table className="min-w-full text-sm">
+      <table className="min-w-[760px] text-[11px] sm:min-w-full sm:text-sm">
         <thead className="sticky top-0 z-10">
-          <tr className="bg-slate-900 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">
-            <th className="w-20 px-4 py-4">日付</th>
-            <th className="w-8 px-3 py-4">曜日</th>
-            <th className="w-8 px-3 py-4">時限</th>
-            <th className="w-48 px-4 py-4">授業内容</th>
-            <th className="w-20 px-4 py-4">担当講師</th>
-            <th className="w-16 px-3 py-4">コマ数</th>
-            <th className="w-28 px-3 py-4">学年・クラス</th>
+          <tr className="bg-slate-900 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-200 sm:text-xs sm:tracking-[0.2em]">
+            <th className="w-20 whitespace-nowrap px-2 py-3 sm:px-4 sm:py-4">日付</th>
+            <th className="w-8 whitespace-nowrap px-2 py-3 sm:px-3 sm:py-4">曜日</th>
+            <th className="w-9 whitespace-nowrap px-2 py-3 sm:px-3 sm:py-4">時限</th>
+            <th className="w-52 whitespace-nowrap px-2 py-3 sm:px-4 sm:py-4">授業内容</th>
+            <th className="w-24 whitespace-nowrap px-2 py-3 sm:px-4 sm:py-4">担当講師</th>
+            <th className="w-16 whitespace-nowrap px-2 py-3 sm:px-3 sm:py-4">コマ数</th>
+            <th className="w-24 whitespace-nowrap px-2 py-3 sm:px-3 sm:py-4">学年・クラス</th>
           </tr>
         </thead>
         <tbody className="text-slate-600">
@@ -146,7 +146,7 @@ export default function ListView({ data, filter, showExamsOnly }) {
                 ${isToday ? "ring-1 ring-inset ring-[#ffb36b]" : ""}
               `}
               >
-                <td className="whitespace-nowrap px-4 py-4 font-semibold text-slate-800">
+                <td className="whitespace-nowrap px-2 py-3 font-semibold text-slate-800 sm:px-4 sm:py-4">
                   {formattedDate}
                   {isToday && (
                     <span className="ml-2 inline-block align-middle">
@@ -160,14 +160,18 @@ export default function ListView({ data, filter, showExamsOnly }) {
                     </span>
                   )}
                 </td>
-                <td className="px-3 py-4">{shortenDayOfWeek(item.曜日 || "")}</td>
-                <td className="px-3 py-4 font-semibold text-slate-800">{item.時限}</td>
-                <td className="px-4 py-4 text-slate-800">{content}</td>
-                <td className="px-4 py-4">{item[`${year}年${cls}クラス担当講師名`]}</td>
-                <td className="px-3 py-4">
-                  <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{periods}</span>
+                <td className="whitespace-nowrap px-2 py-3 sm:px-3 sm:py-4">{shortenDayOfWeek(item.曜日 || "")}</td>
+                <td className="whitespace-nowrap px-2 py-3 font-semibold text-slate-800 sm:px-3 sm:py-4">{item.時限}</td>
+                <td className="max-w-[13rem] overflow-hidden text-ellipsis whitespace-nowrap px-2 py-3 text-slate-800 sm:max-w-none sm:px-4 sm:py-4">
+                  {content}
                 </td>
-                <td className="px-3 py-4 font-medium text-slate-700">{`${year}年${cls}クラス`}</td>
+                <td className="max-w-[7rem] overflow-hidden text-ellipsis whitespace-nowrap px-2 py-3 sm:max-w-none sm:px-4 sm:py-4">
+                  {item[`${year}年${cls}クラス担当講師名`]}
+                </td>
+                <td className="whitespace-nowrap px-2 py-3 sm:px-3 sm:py-4">
+                  <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 sm:px-2 sm:py-1 sm:text-xs">{periods}</span>
+                </td>
+                <td className="whitespace-nowrap px-2 py-3 font-medium text-slate-700 sm:px-3 sm:py-4">{`${year}年${cls}クラス`}</td>
               </tr>
             )
           })}
