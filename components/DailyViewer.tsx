@@ -254,17 +254,20 @@ export default function DailyViewer() {
                           <h4 className="mb-2 inline-block rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-semibold text-slate-600 sm:px-3 sm:text-xs">
                             昼間部
                           </h4>
-                          <div className="grid grid-cols-2 gap-2 md:grid-cols-2 xl:grid-cols-3">
-                            {years.map((year) =>
-                              dayClasses.map((cls) => (
-                                <div key={`${year}${cls}`} className="overflow-hidden rounded-[0.9rem] border border-white/80 bg-white/85 shadow-sm sm:rounded-[1.2rem]">
-                                  <div className="border-b border-slate-100 px-2.5 py-2 text-[11px] font-bold leading-tight text-slate-700 sm:px-3 sm:text-xs">
-                                    {year}年{cls}クラス
+                          <div className="space-y-1.5 sm:space-y-2">
+                            {dayClasses.map((cls) => (
+                              <div key={cls} className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                                {years.map((year) => (
+                                  <div key={`${year}${cls}`} className="overflow-hidden rounded-[0.9rem] border border-white/80 bg-white/85 shadow-sm sm:rounded-[1.2rem]">
+                                    <div className="border-b border-slate-100 px-1.5 py-1.5 text-[9px] font-bold leading-tight text-slate-700 sm:px-3 sm:py-2 sm:text-xs">
+                                      <span className="sm:hidden">{year}{cls}</span>
+                                      <span className="hidden sm:inline">{year}年{cls}クラス</span>
+                                    </div>
+                                    <ClassContent item={item} year={year} cls={cls} compact />
                                   </div>
-                                  <ClassContent item={item} year={year} cls={cls} />
-                                </div>
-                              )),
-                            )}
+                                ))}
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}
@@ -300,13 +303,19 @@ export default function DailyViewer() {
   )
 }
 
-function ClassContent({ item, year, cls }) {
+function ClassContent({ item, year, cls, compact = false }) {
   const content = item[`${year}年${cls}クラスの授業内容`]
   const teacher = item[`${year}年${cls}クラス担当講師名`]
   const periods = item[`${year}年${cls}クラスコマ数`]
 
   if (!content && !periods) {
-    return <div className="h-20 bg-slate-50 px-3 py-3 text-xs text-slate-400">データなし</div>
+    return (
+      <div
+        className={`${compact ? "min-h-[4.4rem] px-1.5 py-1.5 text-[10px]" : "min-h-[5.25rem] px-2 py-2 text-[11px]"} bg-slate-50 text-slate-400 sm:h-20 sm:px-3 sm:py-3 sm:text-xs`}
+      >
+        データなし
+      </div>
+    )
   }
 
   const isExam = periods?.includes("試験")
@@ -319,18 +328,26 @@ function ClassContent({ item, year, cls }) {
   else if (isSelfStudy) bgColorClass = "bg-sky-50"
 
   return (
-    <div className={`min-h-[5.75rem] px-2.5 py-2.5 sm:h-20 sm:overflow-hidden sm:px-3 sm:py-3 ${bgColorClass}`}>
-      {content && <p className="line-clamp-3 text-xs font-semibold leading-4 text-slate-800 sm:line-clamp-2 sm:text-sm sm:leading-5">{content}</p>}
-      <div className="mt-2 flex items-end justify-between gap-2">
+    <div
+      className={`${compact ? "min-h-[4.4rem] px-1.5 py-1.5" : "min-h-[5.25rem] px-2 py-2"} sm:h-20 sm:overflow-hidden sm:px-3 sm:py-3 ${bgColorClass}`}
+    >
+      {content && (
+        <p
+          className={`${compact ? "line-clamp-2 text-[10px] leading-[1.2rem]" : "line-clamp-3 text-[11px] leading-4"} font-semibold text-slate-800 sm:line-clamp-2 sm:text-sm sm:leading-5`}
+        >
+          {content}
+        </p>
+      )}
+      <div className={`${compact ? "mt-1.5 gap-1" : "mt-2 gap-1.5"} flex items-end justify-between sm:gap-2`}>
         {teacher && (
           <div className="flex min-w-0 items-center self-end">
-            <User size={10} className="mr-1 text-slate-500" />
-            <p className="truncate text-[11px] text-slate-600">{teacher}</p>
+            <User size={10} className="mr-1 hidden text-slate-500 sm:block" />
+            <p className={`${compact ? "text-[9px]" : "text-[10px]"} truncate text-slate-600 sm:text-[11px]`}>{teacher}</p>
           </div>
         )}
         {periods && (
           <span
-            className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold leading-none ${
+            className={`${compact ? "px-1 py-0.5 text-[8px]" : "px-1.5 py-1 text-[9px]"} shrink-0 rounded-full font-semibold leading-none sm:px-2 sm:py-1 sm:text-[10px] ${
               isExam
                 ? "bg-red-100 text-red-700"
                 : isMockExam
