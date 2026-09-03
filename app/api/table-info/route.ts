@@ -29,8 +29,8 @@ export async function GET() {
       )
     }
 
-    // スケジュールテーブルの情報を取得
-    const { data, error } = await supabase.from("スケジュール").select("*").limit(1)
+    // curriculumテーブルの情報を取得
+    const { data, error } = await supabase.from("curriculum").select("*").limit(1)
 
     if (error) {
       console.error("テーブル情報取得エラー:", error)
@@ -42,7 +42,7 @@ export async function GET() {
       // システム情報からテーブル構造を取得する代替処理を実装
       try {
         const { data: tableData, error: tableError } = await supabase.rpc("get_table_info", {
-          table_name: "スケジュール",
+          table_name: "curriculum",
         })
 
         if (tableError) throw tableError
