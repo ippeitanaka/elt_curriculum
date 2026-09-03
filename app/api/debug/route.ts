@@ -30,7 +30,7 @@ export async function GET() {
     }
 
     // 日付の範囲を指定せずに全データを取得
-    const { data, error } = await supabase.from("スケジュール").select("*").order("日付", { ascending: true })
+    const { data, error } = await supabase.from("curriculum").select("*").order("日付", { ascending: true })
 
     if (error) {
       console.error("Supabaseクエリエラー:", error)
