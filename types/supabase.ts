@@ -1,7 +1,7 @@
 export type Database = {
   public: {
     Tables: {
-      スケジュール: {
+      curriculum: {
         Row: {
           日付: string | null
           曜日: string | null
