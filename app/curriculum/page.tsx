@@ -22,7 +22,7 @@ async function fetchAllData(supabase: any) {
 
   while (hasMore) {
     const { data, error } = await supabase
-      .from("スケジュール")
+      .from("curriculum")
       .select("*")
       .order("日付", { ascending: true })
       .order("時限", { ascending: true })
