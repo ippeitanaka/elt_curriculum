@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     // この日付範囲のデータを削除
     const { error, count } = await supabase
-      .from("スケジュール")
+      .from("curriculum")
       .delete({ count: "exact" })
       .gte("日付", minDate)
       .lte("日付", maxDate)
