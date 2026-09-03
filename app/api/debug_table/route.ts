@@ -30,8 +30,8 @@ export async function GET() {
       )
     }
 
-    // スケジュールテーブルの構造を確認
-    const { data, error } = await supabase.from("スケジュール").select("*").limit(1)
+    // curriculumテーブルの構造を確認
+    const { data, error } = await supabase.from("curriculum").select("*").limit(1)
 
     if (error) {
       console.error("Supabaseクエリエラー:", error)
@@ -71,7 +71,7 @@ export async function GET() {
     if (isTableNotExistError) {
       return NextResponse.json({
         tableExists: false,
-        error: "スケジュールテーブルが存在しません",
+        error: "curriculumテーブルが存在しません",
       })
     }
 
