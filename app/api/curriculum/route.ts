@@ -29,7 +29,7 @@ async function fetchAllData(supabase) {
     const pageSize = 1000
 
     // 最初にテーブルが存在するか確認
-    const { error: tableCheckError } = await supabase.from("スケジュール").select("id").limit(1)
+    const { error: tableCheckError } = await supabase.from("curriculum").select("id").limit(1)
 
     if (tableCheckError) {
       console.error("テーブル確認エラー:", tableCheckError)
@@ -40,7 +40,7 @@ async function fetchAllData(supabase) {
       console.log(`API: ${start}行目からデータを取得中...`)
 
       const { data, error } = await supabase
-        .from("スケジュール")
+        .from("curriculum")
         .select("*")
         .order("日付", { ascending: true })
         .order("時限", { ascending: true })
