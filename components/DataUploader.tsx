@@ -2,15 +2,102 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useRef, useState } from "react"
 import Papa from "papaparse"
 import { AlertCircle, Check, Upload, X } from "lucide-react"
 
-// CSVパース結果の型定義
 interface ParsedData {
   data: Record<string, any>[]
   errors: Papa.ParseError[]
   meta: Papa.ParseMeta
+}
+
+const normalizeHeader = (rawHeader: string): string => {
+  const header = rawHeader.replace(/^\uFEFF/, "").trim()
+
+  const basicHeaderMapping: Record<string, string> = {
+    "�ｿ譌･莉�": "日付",
+    "譌･莉�": "日付",
+    月日: "日付",
+    日付: "日付",
+    譖懈律: "曜日",
+    曜日: "曜日",
+    譎る俣: "時間",
+    時間: "時間",
+    譎る剞: "時限",
+    時限: "時限",
+    時: "時限",
+    限: "時限",
+    全体行事: "全体行事",
+    広報: "広報",
+    学科予定: "学科予定",
+    試験: "試験",
+  }
+
+  if (basicHeaderMapping[header]) {
+    return basicHeaderMapping[header]
+  }
+
+  // 新しい元データCSVの短縮ヘッダーを、既存Supabase列名へ自動変換する。
+  const contentMatch = header.match(/^([123])年([ABN])$/)
+  if (contentMatch) {
+    return `${contentMatch[1]}年${contentMatch[2]}クラスの授業内容`
+  }
+
+  const teacherMatch = header.match(/^([123])([ABN])講師$/)
+  if (teacherMatch) {
+    return `${teacherMatch[1]}年${teacherMatch[2]}クラス担当講師名`
+  }
+
+  const periodsMatch = header.match(/^([123])([ABN])コマ数$/)
+  if (periodsMatch) {
+    return `${periodsMatch[1]}年${periodsMatch[2]}クラスコマ数`
+  }
+
+  // 旧CSVで発生していた文字化けヘッダーにも引き続き対応する。
+  const mojibakeClassPattern = /(\d+)蟷ｴ([A-Z])繧ｯ繝ｩ繧ｹ(.+)/
+  const mojibakeMatch = header.match(mojibakeClassPattern)
+  if (mojibakeMatch) {
+    const year = mojibakeMatch[1]
+    const className = mojibakeMatch[2]
+    const suffix = mojibakeMatch[3]
+
+    let normalizedSuffix = suffix
+    if (suffix.includes("縺ｮ謗域･ｭ蜀�ｮｹ")) {
+      normalizedSuffix = "の授業内容"
+    } else if (suffix.includes("諡�ｽ楢ｬ帛ｸｫ蜷�")) {
+      normalizedSuffix = "担当講師名"
+    } else if (suffix.includes("繧ｳ繝樊焚")) {
+      normalizedSuffix = "コマ数"
+    }
+
+    return `${year}年${className}クラス${normalizedSuffix}`
+  }
+
+  if (header.includes("讓｡謫ｬ隧ｦ鬨�")) {
+    return "模擬試験"
+  }
+
+  return header
+}
+
+const normalizeDate = (value: unknown): string | null => {
+  if (value === null || value === undefined || value === "") return null
+
+  const dateText = String(value).trim()
+
+  if (/^\d{8}$/.test(dateText)) {
+    return `${dateText.slice(0, 4)}-${dateText.slice(4, 6)}-${dateText.slice(6, 8)}`
+  }
+
+  const parts = dateText.split(/[-/年月日]/).filter(Boolean)
+  if (parts.length === 3) {
+    let [year, month, day] = parts
+    if (year.length <= 2) year = `20${year.padStart(2, "0")}`
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
+  }
+
+  return dateText
 }
 
 export default function DataUploader() {
@@ -31,9 +118,9 @@ export default function DataUploader() {
   }
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + " bytes"
-    else if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB"
-    else return (bytes / (1024 * 1024)).toFixed(1) + " MB"
+    if (bytes < 1024) return `${bytes} bytes`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   }
 
   const resetUploader = () => {
@@ -41,72 +128,7 @@ export default function DataUploader() {
     setMessage("")
     setMessageType(null)
     setProgress(0)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""
-    }
-  }
-
-  const normalizeHeader = (header: string): string => {
-    // 基本的なヘッダーマッピング
-    const basicHeaderMapping: Record<string, string> = {
-      "�ｿ譌･莉�": "日付",
-      "譌･莉�": "日付",
-      日付: "日付",
-      譖懈律: "曜日",
-      曜日: "曜日",
-      譎る俣: "時間",
-      時間: "時間",
-      譎る剞: "時限",
-      時限: "時限",
-      時: "時限",
-      限: "時限",
-    }
-
-    // 完全一致のマッピングをチェック
-    if (basicHeaderMapping[header]) {
-      return basicHeaderMapping[header]
-    }
-
-    // 部分一致のマッピングをチェック
-    for (const [pattern, replacement] of Object.entries(basicHeaderMapping)) {
-      if (header.includes(pattern)) {
-        return replacement
-      }
-    }
-
-    // クラス情報のヘッダーを正規化
-    // 例: "1蟷ｴA繧ｯ繝ｩ繧ｹ縺ｮ謗域･ｭ蜀�ｮｹ" → "1年Aクラスの授業内容"
-    const classPattern = /(\d+)蟷ｴ([A-Z])繧ｯ繝ｩ繧ｹ(.+)/
-    const match = header.match(classPattern)
-
-    if (match) {
-      const year = match[1] // 学年
-      const className = match[2] // クラス名 (A, B, N)
-      const suffix = match[3] // 残りの部分
-
-      // 残りの部分を正規化
-      let normalizedSuffix = ""
-      if (suffix.includes("縺ｮ謗域･ｭ蜀�ｮｹ")) {
-        normalizedSuffix = "の授業内容"
-      } else if (suffix.includes("諡�ｽ楢ｬ帛ｸｫ蜷�")) {
-        normalizedSuffix = "担当講師名"
-      } else if (suffix.includes("繧ｳ繝樊焚")) {
-        normalizedSuffix = "コマ数"
-      } else {
-        // その他の場合はそのまま使用
-        normalizedSuffix = suffix
-      }
-
-      return `${year}年${className}クラス${normalizedSuffix}`
-    }
-
-    // 特殊なケース: 模擬試験
-    if (header.includes("讓｡謫ｬ隧ｦ鬨�")) {
-      return "模擬試験"
-    }
-
-    // それ以外の場合は元のヘッダーをそのまま返す
-    return header
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
   const handleUpload = async () => {
@@ -122,181 +144,85 @@ export default function DataUploader() {
     setMessageType("info")
 
     try {
-      // ファイルを ArrayBuffer として読み込み
       const arrayBuffer = await file.arrayBuffer()
       setProgress(20)
 
-      // 複数のエンコーディングを試す
-      let text = ""
-      const encodings = ["shift-jis", "utf-8", "euc-jp"]
-
-      // 各エンコーディングを試して、最も文字化けが少ないものを選択
-      const encodingResults = []
+      const encodings = ["utf-8", "shift-jis", "euc-jp"]
+      const encodingResults: Array<{ encoding: string; text: string; corruptionCount: number; headerScore: number }> = []
+      const expectedHeaders = ["月日", "日付", "曜日", "時間", "時限", "1年A", "1A講師"]
 
       for (const encoding of encodings) {
         try {
-          const decoder = new TextDecoder(encoding)
-          const decodedText = decoder.decode(arrayBuffer)
-
-          // 文字化けの検出（�や制御文字の数をカウント）
+          const decodedText = new TextDecoder(encoding).decode(arrayBuffer)
           const corruptionCount = (decodedText.match(/[\uFFFD\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g) || []).length
-
-          encodingResults.push({
-            encoding,
-            text: decodedText,
-            corruptionCount,
-          })
-        } catch (error) {
-          // エンコーディングエラーは無視
+          const firstLine = decodedText.split(/\r?\n/)[0] || ""
+          const headerScore = expectedHeaders.reduce((score, item) => score + (firstLine.includes(item) ? 1 : 0), 0)
+          encodingResults.push({ encoding, text: decodedText, corruptionCount, headerScore })
+        } catch {
+          // 未対応エンコーディングは無視
         }
       }
 
-      // 文字化けが最も少ないエンコーディングを選択
-      if (encodingResults.length > 0) {
-        encodingResults.sort((a, b) => a.corruptionCount - b.corruptionCount)
-        const bestResult = encodingResults[0]
-        text = bestResult.text
-      }
-
-      if (!text) {
+      if (encodingResults.length === 0) {
         throw new Error("ファイルのエンコーディングを検出できませんでした")
       }
 
+      encodingResults.sort((a, b) => {
+        if (b.headerScore !== a.headerScore) return b.headerScore - a.headerScore
+        return a.corruptionCount - b.corruptionCount
+      })
+      const text = encodingResults[0].text
       setProgress(30)
 
-      // ファイルの先頭部分を確認してデリミタ（区切り文字）を推測
-      const firstLine = text.split("\n")[0]
-      const hasCommas = firstLine.includes(",")
-      const hasTabs = firstLine.includes("\t")
+      const firstLine = text.split(/\r?\n/)[0] || ""
+      const delimiter = firstLine.includes("\t") && !firstLine.includes(",") ? "\t" : ","
 
-      let delimiter = "," // デフォルト
-
-      if (hasTabs && !hasCommas) {
-        delimiter = "\t"
-      }
-
-      // CSV をパース
-      const parseResult: ParsedData = Papa.parse(text, {
+      const parseResult = Papa.parse(text, {
         header: true,
         skipEmptyLines: true,
-        delimiter: delimiter,
-        transformHeader: (header) => {
-          // ヘッダーを正規化
-          return normalizeHeader(header)
-        },
+        delimiter,
+        transformHeader: normalizeHeader,
         transform: (value, field) => {
-          // 値を正規化（文字化け対策）
-          if (!value) return null
-
-          const trimmed = value.trim()
-
-          // 明らかな文字化けパターンを検出
-          if (/[\uFFFD\u0000-\u0008\u000B-\u000C\u000E-\u001F]/.test(trimmed)) {
-            return null
-          }
-
-          // 日付フィールドの特別処理
-          if (field === "日付") {
-            // 様々な日付形式に対応
-            if (trimmed.includes("-") || trimmed.includes("/") || /\d+年\d+月\d+日/.test(trimmed)) {
-              return trimmed // 日付形式は upload API で処理
-            }
-
-            // 数字のみの場合（例: 20250930）
-            if (/^\d{8}$/.test(trimmed)) {
-              const year = trimmed.substring(0, 4)
-              const month = trimmed.substring(4, 6)
-              const day = trimmed.substring(6, 8)
-              return `${year}-${month}-${day}`
-            }
-          }
-
-          return trimmed
+          if (value === null || value === undefined || value === "") return null
+          const trimmed = String(value).trim()
+          if (/[\uFFFD\u0000-\u0008\u000B-\u000C\u000E-\u001F]/.test(trimmed)) return null
+          if (field === "日付") return normalizeDate(trimmed)
+          return trimmed || null
         },
       }) as ParsedData
 
-      // エラーチェック
-      if (parseResult.errors && parseResult.errors.length > 0) {
+      if (parseResult.errors.length > 0) {
         throw new Error(`ファイルパースエラー: ${parseResult.errors[0].message}`)
       }
-
-      // データチェック
-      if (!parseResult.data || parseResult.data.length === 0) {
+      if (!parseResult.data.length) {
         throw new Error("ファイルにデータが含まれていません")
       }
 
       setProgress(50)
 
-      // 必要なフィールドが存在するか確認
       const requiredFields = ["日付", "曜日", "時限"]
       const missingFields = requiredFields.filter((field) => !parseResult.meta.fields?.includes(field))
 
-      if (missingFields.length > 0) {
-        // 時間フィールドがあれば時限として使用
-        if (missingFields.includes("時限") && parseResult.meta.fields?.includes("時間")) {
-          // データの各行で時間を時限にコピー
-          parseResult.data.forEach((row) => {
-            if (row["時間"] && !row["時限"]) {
-              row["時限"] = row["時間"]
-            }
-          })
-
-          // 時限フィールドを必須フィールドから削除
-          const timeIndex = missingFields.indexOf("時限")
-          if (timeIndex !== -1) {
-            missingFields.splice(timeIndex, 1)
-          }
-        }
-
-        // それでも必須フィールドが不足している場合はエラー
-        if (missingFields.length > 0) {
-          throw new Error(`必須フィールドがファイルに存在しません: ${missingFields.join(", ")}`)
-        }
+      if (missingFields.includes("時限") && parseResult.meta.fields?.includes("時間")) {
+        parseResult.data.forEach((row) => {
+          if (row["時間"] && !row["時限"]) row["時限"] = row["時間"]
+        })
+        missingFields.splice(missingFields.indexOf("時限"), 1)
       }
 
-      // データの検証と前処理
+      if (missingFields.length > 0) {
+        throw new Error(`必須フィールドがファイルに存在しません: ${missingFields.join(", ")}`)
+      }
+
       const validatedData = parseResult.data.map((row) => {
-        const newRow = { ...row }
+        const newRow = { ...row, 日付: normalizeDate(row.日付) }
 
-        // 日付フォーマットの統一
-        if (newRow.日付) {
-          // 様々な日付形式に対応
-          let dateParts
-          if (newRow.日付.includes("-")) {
-            dateParts = newRow.日付.split("-").filter((part) => part !== "")
-          } else if (newRow.日付.includes("/")) {
-            dateParts = newRow.日付.split("/").filter((part) => part !== "")
-          } else {
-            // 年月日形式 (例: 2025年9月30日)
-            dateParts = newRow.日付.split(/[年月日]/).filter((part) => part !== "")
-          }
-
-          if (dateParts && dateParts.length === 3) {
-            let [year, month, day] = dateParts
-
-            // 年が2桁の場合は4桁に変換
-            if (year.length <= 2) {
-              year = `20${year.padStart(2, "0")}`
-            }
-
-            // 月と日が1桁の場合は2桁に変換
-            month = month.padStart(2, "0")
-            day = day.padStart(2, "0")
-
-            newRow.日付 = `${year}-${month}-${day}`
-          }
-        }
-
-        // 「時間」フィールドを「時限」にマッピング
         if (newRow.hasOwnProperty("時間") && !newRow.hasOwnProperty("時限")) {
           newRow["時限"] = newRow["時間"]
         }
 
-        // 空文字列を null に変換
         Object.keys(newRow).forEach((key) => {
-          if (newRow[key] === "") {
-            newRow[key] = null
-          }
+          if (newRow[key] === "") newRow[key] = null
         })
 
         return newRow
@@ -305,34 +231,22 @@ export default function DataUploader() {
       setProgress(60)
       setMessage("データをアップロード中...")
 
-      // 日付範囲を取得して先に削除リクエストを送信
       const dates = validatedData.map((item) => item.日付).filter(Boolean)
       const uniqueDates = [...new Set(dates)].sort()
 
       if (uniqueDates.length > 0) {
-        const minDate = uniqueDates[0]
-        const maxDate = uniqueDates[uniqueDates.length - 1]
+        const deleteResponse = await fetch("/api/delete-range", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ minDate: uniqueDates[0], maxDate: uniqueDates[uniqueDates.length - 1] }),
+        })
 
-        try {
-          const deleteResponse = await fetch("/api/delete-range", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ minDate, maxDate }),
-          })
-
-          if (!deleteResponse.ok) {
-            throw new Error("既存データの削除に失敗しました")
-          }
-
-          setProgress(70)
-        } catch (error) {
-          throw new Error("既存データの削除中にエラーが発生しました")
+        if (!deleteResponse.ok) {
+          throw new Error("既存データの削除に失敗しました")
         }
+        setProgress(70)
       }
 
-      // データを一度に10件ずつに分割してアップロード
       const chunkSize = 10
       let uploadedCount = 0
       let failedChunks = 0
@@ -343,39 +257,30 @@ export default function DataUploader() {
         try {
           const response = await fetch("/api/upload", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(chunk),
           })
 
-          if (!response.ok) {
-            throw new Error("データのアップロードに失敗しました")
-          }
-
+          if (!response.ok) throw new Error("データのアップロードに失敗しました")
           const result = await response.json()
           uploadedCount += result.count || 0
-        } catch (error) {
+        } catch {
           failedChunks++
         }
 
-        // プログレスバーを更新
         setProgress(70 + Math.floor((i / validatedData.length) * 30))
-
-        // 処理の負荷を分散するために少し待機
         await new Promise((resolve) => setTimeout(resolve, 300))
       }
 
       setProgress(100)
 
       if (failedChunks > 0) {
-        if (uploadedCount > 0) {
-          setMessage(`一部のデータ (${uploadedCount} 件) がアップロードされましたが、エラーが発生しました。`)
-          setMessageType("error")
-        } else {
-          setMessage("データのアップロードに失敗しました。")
-          setMessageType("error")
-        }
+        setMessage(
+          uploadedCount > 0
+            ? `一部のデータ (${uploadedCount} 件) がアップロードされましたが、エラーが発生しました。`
+            : "データのアップロードに失敗しました。",
+        )
+        setMessageType("error")
       } else {
         setMessage(`データが正常にアップロードされました (${uploadedCount} 件)`)
         setMessageType("success")
@@ -398,7 +303,7 @@ export default function DataUploader() {
       <div className="mb-4">
         <label
           htmlFor="file-upload"
-          className={`flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-blue-400 focus:outline-none ${
+          className={`flex justify-center w-full h-32 px-4 transition bg-white border-2 border-dashed rounded-md appearance-none cursor-pointer hover:border-blue-400 focus:outline-none ${
             file ? "border-green-500" : "border-gray-300"
           }`}
         >
@@ -407,8 +312,7 @@ export default function DataUploader() {
               <>
                 <Upload className="w-8 h-8 text-gray-500" />
                 <span className="text-sm text-gray-500">
-                  ファイルをここにドラッグするか、<span className="text-blue-600 underline">参照</span>
-                  をクリックしてください
+                  ファイルをここにドラッグするか、<span className="text-blue-600 underline">参照</span>をクリックしてください
                 </span>
                 <span className="text-xs text-gray-500">CSV/TSVファイル (*.csv, *.tsv)</span>
               </>
@@ -461,7 +365,7 @@ export default function DataUploader() {
 
       {progress > 0 && progress < 100 && (
         <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
+          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }} />
         </div>
       )}
 
@@ -471,26 +375,7 @@ export default function DataUploader() {
           disabled={uploading || !file}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center"
         >
-          {uploading ? (
-            <>
-              <svg
-                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              アップロード中...
-            </>
-          ) : (
-            "アップロード"
-          )}
+          {uploading ? "アップロード中..." : "アップロード"}
         </button>
         {file && (
           <button
