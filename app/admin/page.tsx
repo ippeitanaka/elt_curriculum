@@ -15,7 +15,7 @@ export default async function AdminPage() {
 
   // データベースの状態を確認
   const { data: scheduleData, error: scheduleError } = await supabase
-    .from("スケジュール")
+    .from("curriculum")
     .select("日付")
     .order("日付", { ascending: false })
     .limit(1)
@@ -23,7 +23,7 @@ export default async function AdminPage() {
   const latestDate = scheduleData && scheduleData.length > 0 ? scheduleData[0].日付 : "データなし"
 
   // 総データ件数を確認
-  const { count: totalCount } = await supabase.from("スケジュール").select("*", { count: "exact", head: true })
+  const { count: totalCount } = await supabase.from("curriculum").select("*", { count: "exact", head: true })
 
   return (
     <div className="container mx-auto px-4 py-8">
