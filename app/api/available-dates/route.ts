@@ -36,7 +36,7 @@ export async function GET() {
     }
 
     // 利用可能なすべての日付を取得
-    const { data, error } = await supabase.from("スケジュール").select("日付").order("日付", { ascending: true })
+    const { data, error } = await supabase.from("curriculum").select("日付").order("日付", { ascending: true })
 
     if (error) {
       console.error("Supabaseクエリエラー:", error)
