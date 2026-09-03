@@ -104,7 +104,7 @@ export async function POST(request: Request) {
     }
 
     // テーブル構造を取得
-    const { data: tableInfo, error: tableError } = await supabase.from("スケジュール").select("*").limit(1)
+    const { data: tableInfo, error: tableError } = await supabase.from("curriculum").select("*").limit(1)
 
     if (tableError) {
       throw new Error(`テーブル構造確認エラー: ${tableError.message}`)
@@ -135,7 +135,7 @@ export async function POST(request: Request) {
     })
 
     // データを挿入
-    const { error: insertError, count } = await supabase.from("スケジュール").insert(cleanedData, { count: "exact" })
+    const { error: insertError, count } = await supabase.from("curriculum").insert(cleanedData, { count: "exact" })
 
     if (insertError) {
       throw new Error(`データ挿入エラー: ${insertError.message}`)
