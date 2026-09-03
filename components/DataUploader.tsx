@@ -38,7 +38,6 @@ const normalizeHeader = (rawHeader: string): string => {
     return basicHeaderMapping[header]
   }
 
-  // 新しい元データCSVの短縮ヘッダーを、既存Supabase列名へ自動変換する。
   const contentMatch = header.match(/^([123])年([ABN])$/)
   if (contentMatch) {
     return `${contentMatch[1]}年${contentMatch[2]}クラスの授業内容`
@@ -54,7 +53,6 @@ const normalizeHeader = (rawHeader: string): string => {
     return `${periodsMatch[1]}年${periodsMatch[2]}クラスコマ数`
   }
 
-  // 旧CSVで発生していた文字化けヘッダーにも引き続き対応する。
   const mojibakeClassPattern = /(\d+)蟷ｴ([A-Z])繧ｯ繝ｩ繧ｹ(.+)/
   const mojibakeMatch = header.match(mojibakeClassPattern)
   if (mojibakeMatch) {
@@ -75,7 +73,7 @@ const normalizeHeader = (rawHeader: string): string => {
   }
 
   if (header.includes("讓｡謫ｬ隧ｦ鬨�")) {
-    return "模擬試験"
+    return "3年各種模擬試験"
   }
 
   return header
@@ -229,7 +227,7 @@ export default function DataUploader() {
       })
 
       setProgress(60)
-      setMessage("データをアップロード中...")
+      setMessage("既存データを更新準備中...")
 
       const dates = validatedData.map((item) => item.日付).filter(Boolean)
       const uniqueDates = [...new Set(dates)].sort()
@@ -244,47 +242,25 @@ export default function DataUploader() {
         if (!deleteResponse.ok) {
           throw new Error("既存データの削除に失敗しました")
         }
-        setProgress(70)
       }
 
-      const chunkSize = 10
-      let uploadedCount = 0
-      let failedChunks = 0
+      setProgress(75)
+      setMessage(`データベースへ一括登録中... (${validatedData.length}件)`)
 
-      for (let i = 0; i < validatedData.length; i += chunkSize) {
-        const chunk = validatedData.slice(i, i + chunkSize)
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(validatedData),
+      })
 
-        try {
-          const response = await fetch("/api/upload", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(chunk),
-          })
-
-          if (!response.ok) throw new Error("データのアップロードに失敗しました")
-          const result = await response.json()
-          uploadedCount += result.count || 0
-        } catch {
-          failedChunks++
-        }
-
-        setProgress(70 + Math.floor((i / validatedData.length) * 30))
-        await new Promise((resolve) => setTimeout(resolve, 300))
+      const result = await response.json().catch(() => null)
+      if (!response.ok) {
+        throw new Error(result?.error || "データのアップロードに失敗しました")
       }
 
       setProgress(100)
-
-      if (failedChunks > 0) {
-        setMessage(
-          uploadedCount > 0
-            ? `一部のデータ (${uploadedCount} 件) がアップロードされましたが、エラーが発生しました。`
-            : "データのアップロードに失敗しました。",
-        )
-        setMessageType("error")
-      } else {
-        setMessage(`データが正常にアップロードされました (${uploadedCount} 件)`)
-        setMessageType("success")
-      }
+      setMessage(`データが正常にアップロードされました (${result?.count ?? validatedData.length} 件)`)
+      setMessageType("success")
     } catch (error) {
       console.error("Error uploading data:", error)
       setProgress(0)
