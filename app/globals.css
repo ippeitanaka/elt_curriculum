@@ -150,6 +150,8 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
 }
 
 .rbc-event-content {
@@ -162,6 +164,7 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  background: transparent !important;
 }
 
 .rbc-event-continues-after {
@@ -233,7 +236,7 @@
 
 @media (max-width: 768px) {
   .calendar-shell {
-    padding: 0.2rem;
+    padding: 0.15rem;
   }
 
   .calendar-shell .rbc-calendar {
@@ -268,10 +271,17 @@
     scrollbar-width: thin;
   }
 
+  .rbc-row-segment {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
   .rbc-event {
-    margin-left: 1px !important;
-    margin-right: 1px !important;
-    width: calc(100% - 2px) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    background: transparent !important;
+    padding: 0 !important;
   }
 
   .rbc-event-content {
@@ -282,14 +292,14 @@
   .calendar-event {
     width: 100%;
     box-sizing: border-box;
-    font-size: 0.54rem;
-    padding: 2px 2px;
+    font-size: 0.47rem;
+    padding: 2px 1px;
     margin: 1px 0;
-    min-height: 27px;
+    min-height: 24px;
     gap: 0;
     align-items: flex-start;
-    border-radius: 7px;
-    line-height: 1.15;
+    border-radius: 6px;
+    line-height: 1.1;
   }
 
   .calendar-event-title {
@@ -304,8 +314,8 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
+    line-height: 1.1;
+    letter-spacing: -0.05em;
   }
 
   .calendar-event-icon {
