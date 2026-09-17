@@ -127,7 +127,7 @@ export default function CalendarView({ data, filter }: CalendarViewProps) {
       const isExam = periods === "試験"
 
       return {
-        title: isExam ? `${content} 試験` : content,
+        title: content,
         start: date,
         end: date,
         periods: periods,
