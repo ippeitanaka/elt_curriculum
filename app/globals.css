@@ -292,14 +292,16 @@
   .calendar-event {
     width: 100%;
     box-sizing: border-box;
-    font-size: 0.47rem;
+    font-size: 0.49rem;
     padding: 2px 1px;
     margin: 1px 0;
     min-height: 24px;
     gap: 0;
-    align-items: flex-start;
-    border-radius: 6px;
-    line-height: 1.1;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    line-height: 1.12;
+    text-align: center;
   }
 
   .calendar-event-title {
@@ -314,12 +316,32 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    line-height: 1.1;
-    letter-spacing: -0.05em;
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+    text-align: center;
   }
 
   .calendar-event-icon {
     display: none;
+  }
+
+  .event-default {
+    background: transparent !important;
+    color: #0f172a;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .event-exam {
+    background: linear-gradient(135deg, #ffe1df 0%, #ffc8bf 100%) !important;
+    color: #7f1d1d;
+    border-radius: 6px !important;
+  }
+
+  .event-mock-exam {
+    background: linear-gradient(135deg, #fff0bf 0%, #ffe08a 100%) !important;
+    color: #7c4700;
+    border-radius: 6px !important;
   }
 
   .rbc-date-cell {
